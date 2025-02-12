@@ -1,39 +1,39 @@
+import React from 'react'
 import { StatusBar } from 'expo-status-bar'
-import { StyleSheet, Text, View } from 'react-native'
-import { useFonts, Inter_400Regular, Inter_500Medium, Inter_700Bold } from '@expo-google-fonts/inter'
-import { useEffect } from "react";
-import * as SplashScreen from 'expo-splash-screen';
+import {
+  useFonts,
+  Inter_400Regular,
+  Inter_500Medium,
+  Inter_700Bold,
+} from '@expo-google-fonts/inter'
+import { useEffect } from 'react'
+import * as SplashScreen from 'expo-splash-screen'
+
+import { GluestackUIProvider } from '@/components/ui/gluestack-ui-provider'
+import { Text } from '@/components/ui/text'
+import '@/styles/global.css'
 
 export default function App() {
   const [loaded, error] = useFonts({
     Inter_400Regular,
     Inter_500Medium,
-    Inter_700Bold
-  });
-
+    Inter_700Bold,
+  })
   useEffect(() => {
     if (loaded || error) {
-      SplashScreen.hideAsync();
+      SplashScreen.hideAsync()
     }
-  }, [loaded, error]);
-
+  }, [loaded, error])
   if (!loaded && !error) {
-    return null;
+    return null
   }
 
   return (
-    <View style={styles.container}>
-      <Text>Hello World!!</Text>
+    <GluestackUIProvider mode="light">
+      <Text size="6xl" className="text-custom-my-orange font-medium border-2">
+        Hello World!!
+      </Text>
       <StatusBar style="auto" />
-    </View>
+    </GluestackUIProvider>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-})
