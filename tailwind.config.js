@@ -192,13 +192,18 @@ module.exports = {
         heading: 'Inter_700Bold',
         body: 'Inter_400Regular',
         medium: 'Inter_500Medium',
+        semibold: 'Inter_600SemiBold',
         inter: ['Inter_400Regular', 'Inter_500Medium', 'Inter_700Bold'],
       },
       fontWeight: {
         extrablack: '950',
       },
       fontSize: {
-        '2xs': '10px',
+        'sm': '13px',
+        'md': '16px',
+        'lg': '20px',
+        'xl': '25px',
+        '2xl': '31px'
       },
       boxShadow: {
         'hard-1': '-2px 2px 8px 0px rgba(38, 38, 38, 0.20)',
