@@ -1,5 +1,5 @@
-import { TouchableOpacity } from "react-native";
-import { Box, Divider, Heading, HStack, Text } from "./ui";
+import { TouchableOpacity } from 'react-native'
+import { Box, Divider, Heading, HStack, Text } from '@/components/ui'
 import EyeIcon from '@/assets/olho.svg'
 import Pixels from '@/assets/pixels.svg'
 import Illustration from '@/assets/ilustracao.svg'
@@ -11,25 +11,29 @@ export function Welcome() {
         style={{
           position: 'absolute',
           top: 0,
-          transform: [{ rotate: '180deg' }]
+          transform: [{ rotate: '180deg' }],
         }}
       />
       <Pixels
         style={{
           position: 'absolute',
           bottom: 0,
-          right: 0
+          right: 0,
         }}
       />
       <Illustration
         style={{
           position: 'absolute',
           bottom: 34,
-          alignSelf: 'center'
+          alignSelf: 'center',
         }}
       />
-      <Heading className="text-white text-center font-semibold text-xl">Olá, Joana :)</Heading>
-      <Text className="text-white text-center text-sm mt-6">Quinta-feira, 08/09/2022</Text>
+      <Heading className="text-white text-center font-semibold text-xl">
+        Olá, Joana :)
+      </Heading>
+      <Text className="text-white text-center text-sm mt-6">
+        Quinta-feira, 08/09/2022
+      </Text>
       <HStack className="items-center gap-6 mt-10">
         <Heading className="text-white font-semibold text-lg">Saldo</Heading>
         <TouchableOpacity>

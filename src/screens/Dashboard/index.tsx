@@ -1,5 +1,5 @@
 import { VStack } from '@/components/ui'
-import { NewTransaction, Welcome } from '@/components'
+import { NewTransaction, Welcome } from './components'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { ScrollView } from 'react-native'
 

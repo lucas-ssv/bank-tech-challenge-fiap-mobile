@@ -19,7 +19,7 @@ import {
   SelectPortal,
   SelectTrigger,
   VStack,
-} from './ui'
+} from '@/components/ui'
 import Pixels from '@/assets/pixels-servicos.svg'
 import Illustration from '@/assets/ilustracao2.svg'
 import ArrowDropdown from '@/assets/arrow-dropdown.svg'
