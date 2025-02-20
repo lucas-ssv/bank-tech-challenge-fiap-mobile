@@ -6,25 +6,22 @@ import Illustration from '@/assets/ilustracao.svg'
 
 export function Welcome() {
   return (
-    <Box className="h-[655px] bg-custom-my-dark-green py-10 px-[66px] rounded-lg">
+    <Box className="h-[655px] bg-custom-my-dark-green py-10 px-[66px] rounded-lg overflow-hidden">
       <Pixels
-        width={144}
         style={{
           position: 'absolute',
-          top: -18,
+          top: 0,
           transform: [{ rotate: '180deg' }]
         }}
       />
       <Pixels
-        width={144}
         style={{
           position: 'absolute',
-          bottom: -18,
+          bottom: 0,
           right: 0
         }}
       />
       <Illustration
-        width={283}
         style={{
           position: 'absolute',
           bottom: 34,

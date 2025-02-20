@@ -32,6 +32,7 @@ module.exports = {
           "my-services-card-bg": "#F2F2F2",
           "my-input-border": "#DEE9EA",
           "my-extract-date-color": "#8B8B8B",
+          "my-placeholder": "#444444"
         },
         primary: {
           0: 'rgb(var(--color-primary-0)/<alpha-value>)',
@@ -193,7 +194,7 @@ module.exports = {
         body: 'Inter_400Regular',
         medium: 'Inter_500Medium',
         semibold: 'Inter_600SemiBold',
-        inter: ['Inter_400Regular', 'Inter_500Medium', 'Inter_700Bold'],
+        inter: ['Inter_400Regular', 'Inter_500Medium', 'Inter_600SemiBold', 'Inter_700Bold'],
       },
       fontWeight: {
         extrablack: '950',
@@ -216,6 +217,11 @@ module.exports = {
         'soft-3': '0px 0px 30px rgba(38, 38, 38, 0.1)',
         'soft-4': '0px 0px 40px rgba(38, 38, 38, 0.1)',
       },
+      button: {
+        action: {
+          teste: '#FF0000'
+        }
+      }
     },
   },
   plugins: [gluestackPlugin],
