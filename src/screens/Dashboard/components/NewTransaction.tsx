@@ -1,3 +1,4 @@
+import { ComponentProps } from 'react'
 import {
   Box,
   Button,
@@ -24,9 +25,14 @@ import Pixels from '@/assets/pixels-servicos.svg'
 import Illustration from '@/assets/ilustracao2.svg'
 import ArrowDropdown from '@/assets/arrow-dropdown.svg'
 
-export function NewTransaction() {
+type Props = ComponentProps<typeof Box>
+
+export function NewTransaction({ className, ...rest }: Props) {
   return (
-    <Box className="h-[655px] bg-custom-my-gray-box py-8 px-4 rounded-lg overflow-hidden">
+    <Box
+      className={`h-[655px] bg-custom-my-gray-box py-8 px-4 rounded-lg overflow-hidden ${className}`}
+      {...rest}
+    >
       <Pixels
         style={{
           position: 'absolute',
@@ -45,6 +51,7 @@ export function NewTransaction() {
           position: 'absolute',
           bottom: 34,
           alignSelf: 'center',
+          marginHorizontal: 16,
         }}
       />
       <Heading className="text-black text-center text-xl font-heading">
@@ -81,7 +88,7 @@ export function NewTransaction() {
           </SelectPortal>
         </Select>
 
-        <VStack className="mx-[84px]">
+        <VStack className="mx-12">
           <FormControlLabel className="justify-center mt-8">
             <FormControlLabelText className="text-md font-semibold">
               Valor

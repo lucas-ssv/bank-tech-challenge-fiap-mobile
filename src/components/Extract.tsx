@@ -1,3 +1,4 @@
+import { ComponentProps } from 'react'
 import {
   Box,
   Button,
@@ -12,17 +13,22 @@ import {
 import Pencil from '@/assets/lapis.svg'
 import Trash from '@/assets/lixeira.svg'
 
-export function Extract() {
+type Props = ComponentProps<typeof Box>
+
+export function Extract({ className, ...rest }: Props) {
   return (
-    <Box className="bg-white rounded-lg py-8 pl-6 pr-12">
-      <HStack className="justify-between gap-12">
+    <Box
+      className={`bg-white rounded-lg py-8 pl-6 pr-12 ${className}`}
+      {...rest}
+    >
+      <HStack className="items-center justify-between gap-12">
         <Heading className="text-xl font-heading">Extrato</Heading>
         <ButtonGroup className="flex-row gap-4">
-          <Button className="h-10 w-10 bg-custom-my-dark-green rounded-full">
-            <ButtonIcon as={Pencil} />
+          <Button className="h-12 w-12 bg-custom-my-dark-green rounded-full">
+            <ButtonIcon as={Pencil} className="w-7 h-7" />
           </Button>
-          <Button className="h-10 w-10 bg-custom-my-dark-green rounded-full">
-            <ButtonIcon as={Trash} />
+          <Button className="h-12 w-12 bg-custom-my-dark-green rounded-full">
+            <ButtonIcon as={Trash} className="w-7 h-7" />
           </Button>
         </ButtonGroup>
       </HStack>

@@ -10,8 +10,8 @@ export function Dashboard() {
       <VStack className="flex-1 bg-custom-my-light-green px-6">
         <SafeAreaView>
           <Welcome />
-          <NewTransaction />
-          <Extract />
+          <NewTransaction className="mt-6" />
+          <Extract className="mt-6" />
         </SafeAreaView>
       </VStack>
     </ScrollView>

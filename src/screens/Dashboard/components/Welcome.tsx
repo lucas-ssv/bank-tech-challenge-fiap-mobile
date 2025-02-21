@@ -1,12 +1,18 @@
+import { ComponentProps } from 'react'
 import { TouchableOpacity } from 'react-native'
 import { Box, Divider, Heading, HStack, Text } from '@/components/ui'
 import EyeIcon from '@/assets/olho.svg'
 import Pixels from '@/assets/pixels.svg'
 import Illustration from '@/assets/ilustracao.svg'
 
-export function Welcome() {
+type Props = ComponentProps<typeof Box>
+
+export function Welcome({ ...rest }: Props) {
   return (
-    <Box className="h-[655px] bg-custom-my-dark-green py-10 px-[66px] rounded-lg overflow-hidden">
+    <Box
+      className="h-[655px] bg-custom-my-dark-green py-10 px-[66px] rounded-lg overflow-hidden"
+      {...rest}
+    >
       <Pixels
         style={{
           position: 'absolute',
@@ -26,6 +32,7 @@ export function Welcome() {
           position: 'absolute',
           bottom: 34,
           alignSelf: 'center',
+          marginHorizontal: 16,
         }}
       />
       <Heading className="text-white text-center font-semibold text-xl">
