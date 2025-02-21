@@ -1,5 +1,6 @@
-import { VStack } from '@/components/ui'
 import { NewTransaction, Welcome } from './components'
+import { VStack } from '@/components/ui'
+import { Extract } from '@/components'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { ScrollView } from 'react-native'
 
@@ -10,6 +11,7 @@ export function Dashboard() {
         <SafeAreaView>
           <Welcome />
           <NewTransaction />
+          <Extract />
         </SafeAreaView>
       </VStack>
     </ScrollView>
