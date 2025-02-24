@@ -1,4 +1,4 @@
-import { NewTransaction, Welcome } from './components'
+import { FinancialFlowChart, NewTransaction, Welcome } from './components'
 import { VStack } from '@/components/ui'
 import { Extract } from '@/components'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -11,6 +11,7 @@ export function Dashboard() {
         <SafeAreaView>
           <Welcome />
           <NewTransaction className="mt-6" />
+          <FinancialFlowChart className="mt-6" />
           <Extract className="mt-6" />
         </SafeAreaView>
       </VStack>
