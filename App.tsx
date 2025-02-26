@@ -10,9 +10,10 @@ import {
 import { useEffect } from 'react'
 import * as SplashScreen from 'expo-splash-screen'
 
+import { Routes } from '@/routes'
 import { GluestackUIProvider } from '@/components/ui/gluestack-ui-provider'
-import { Dashboard } from "@/screens"
 import '@/styles/global.css'
+import 'react-native-gesture-handler'
 
 export default function App() {
   const [loaded, error] = useFonts({
@@ -34,8 +35,8 @@ export default function App() {
 
   return (
     <GluestackUIProvider mode="light">
-      <Dashboard />
-      <StatusBar style="auto" />
+      <Routes />
+      <StatusBar style="light" />
     </GluestackUIProvider>
   )
 }
