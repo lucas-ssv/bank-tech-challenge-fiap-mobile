@@ -8,6 +8,7 @@ export function AvatarMenu() {
   return (
     <Menu
       placement="bottom"
+      className="border border-custom-my-dark-green bg-black rounded-lg"
       offset={5}
       trigger={({ ...triggerProps }) => {
         return (
@@ -17,17 +18,35 @@ export function AvatarMenu() {
         )
       }}
     >
-      <MenuItem key="Minha conta" textValue="Minha conta">
-        <Feather name="user" size={16} className="mr-2" />
-        <MenuItemLabel size="sm">Minha conta</MenuItemLabel>
+      <MenuItem
+        key="Minha conta"
+        className="active:!bg-custom-my-placeholder"
+        textValue="Minha conta"
+      >
+        <Feather name="user" color="#47A138" size={16} className="mr-2" />
+        <MenuItemLabel className="text-white" size="sm">
+          Minha conta
+        </MenuItemLabel>
       </MenuItem>
-      <MenuItem key="Configurações" textValue="Configurações">
-        <Feather name="settings" size={16} className="mr-2" />
-        <MenuItemLabel size="sm">Configurações</MenuItemLabel>
+      <MenuItem
+        key="Configurações"
+        className="active:!bg-custom-my-placeholder"
+        textValue="Configurações"
+      >
+        <Feather name="settings" color="#47A138" size={16} className="mr-2" />
+        <MenuItemLabel className="text-white" size="sm">
+          Configurações
+        </MenuItemLabel>
       </MenuItem>
-      <MenuItem key="Sair" textValue="Sair">
-        <Feather name="log-out" size={16} className="mr-2" />
-        <MenuItemLabel size="sm">Sair</MenuItemLabel>
+      <MenuItem
+        key="Sair"
+        className="active:!bg-custom-my-placeholder"
+        textValue="Sair"
+      >
+        <Feather name="log-out" color="#47A138" size={16} className="mr-2" />
+        <MenuItemLabel className="text-white" size="sm">
+          Sair
+        </MenuItemLabel>
       </MenuItem>
     </Menu>
   )
