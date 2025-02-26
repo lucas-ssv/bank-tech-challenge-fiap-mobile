@@ -1,8 +1,19 @@
-import { Box, Text } from '@/components/ui'
+import {
+  Box,
+  FormControl,
+  FormControlLabel,
+  FormControlLabelText,
+  HStack,
+  Input,
+  InputField,
+  Text,
+  VStack,
+} from '@/components/ui'
 import { BarChart } from 'react-native-chart-kit'
 import { LinearGradient } from 'expo-linear-gradient'
 import { Dimensions } from 'react-native'
 import { ComponentProps } from 'react'
+import Feather from '@expo/vector-icons/Feather'
 
 type Props = ComponentProps<typeof Box>
 
@@ -19,9 +30,47 @@ export function FinancialFlowChart({ ...rest }: Props) {
         }}
         colors={['#fb8c00', '#ffa726']}
       >
-        <Text className="text-white text-xl text-center font-heading m-4">
-          Fluxo Financeiro
-        </Text>
+        <VStack className="px-4">
+          <Text className="text-white text-xl text-center font-heading m-4">
+            Fluxo Financeiro
+          </Text>
+          <FormControl>
+            <HStack className="gap-4">
+              <VStack className="flex-1">
+                <FormControlLabel>
+                  <FormControlLabelText className="text-white text-sm">
+                    Data inicial
+                  </FormControlLabelText>
+                </FormControlLabel>
+                <Input className="flex-1 bg-[#fb8c00] rounded-lg" isReadOnly>
+                  <InputField className="text-white" value="10/01/2020" />
+                  <Feather
+                    name="calendar"
+                    color="#FFFFFF"
+                    size={16}
+                    className="mr-2"
+                  />
+                </Input>
+              </VStack>
+              <VStack className="flex-1">
+                <FormControlLabel>
+                  <FormControlLabelText className="text-white text-sm">
+                    Data final
+                  </FormControlLabelText>
+                </FormControlLabel>
+                <Input className="flex-1 bg-[#fb8c00] rounded-lg" isReadOnly>
+                  <InputField className="text-white" value="10/01/2020" />
+                  <Feather
+                    name="calendar"
+                    color="#FFFFFF"
+                    size={16}
+                    className="mr-2"
+                  />
+                </Input>
+              </VStack>
+            </HStack>
+          </FormControl>
+        </VStack>
         <BarChart
           data={{
             labels: ['Depósito', 'DOC/TED'],
@@ -56,6 +105,7 @@ export function FinancialFlowChart({ ...rest }: Props) {
           fromZero
           style={{
             borderRadius: 8,
+            marginTop: 16,
           }}
         />
       </LinearGradient>
