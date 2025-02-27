@@ -16,7 +16,8 @@ const config: Config = {
   },
   moduleNameMapper: {
     '@/(.*)': '<rootDir>/src/$1',
-    '\\.(css|less|sass|scss)$': '<rootDir>/tests/mocks/style-mock.ts'
+    '\\.(css|less|sass|scss)$': '<rootDir>/tests/mocks/style-mock.ts',
+    '\\.svg': '<rootDir>/tests/mocks/svg-mock.ts'
   }
 }
 

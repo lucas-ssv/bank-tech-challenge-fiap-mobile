@@ -5,18 +5,21 @@ import {
   Inter_400Regular,
   Inter_500Medium,
   Inter_700Bold,
+  Inter_600SemiBold,
 } from '@expo-google-fonts/inter'
 import { useEffect } from 'react'
 import * as SplashScreen from 'expo-splash-screen'
 
+import { Routes } from '@/routes'
 import { GluestackUIProvider } from '@/components/ui/gluestack-ui-provider'
-import { Text } from '@/components/ui/text'
 import '@/styles/global.css'
+import 'react-native-gesture-handler'
 
 export default function App() {
   const [loaded, error] = useFonts({
     Inter_400Regular,
     Inter_500Medium,
+    Inter_600SemiBold,
     Inter_700Bold,
   })
 
@@ -32,10 +35,8 @@ export default function App() {
 
   return (
     <GluestackUIProvider mode="light">
-      <Text size="6xl" className="text-custom-my-orange font-medium border-2">
-        Hello World!!
-      </Text>
-      <StatusBar style="auto" />
+      <Routes />
+      <StatusBar style="light" />
     </GluestackUIProvider>
   )
 }
