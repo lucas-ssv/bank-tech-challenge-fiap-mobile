@@ -4,21 +4,21 @@ import {
   FormControlLabel,
   FormControlLabelText,
   HStack,
-  Input,
-  InputField,
   Text,
   VStack,
 } from '@/components/ui'
 import { BarChart } from 'react-native-chart-kit'
 import { LinearGradient } from 'expo-linear-gradient'
 import { Dimensions } from 'react-native'
-import { ComponentProps } from 'react'
-import Feather from '@expo/vector-icons/Feather'
+import { ComponentProps, useState } from 'react'
+import { InputDate } from '@/components'
 
 type Props = ComponentProps<typeof Box>
 
 export function FinancialFlowChart({ ...rest }: Props) {
   const screenWidth = Dimensions.get('window').width
+  const [startDate, setStartDate] = useState<Date>(new Date())
+  const [endDate, setEndDate] = useState<Date>(new Date())
 
   return (
     <Box className="flex-1 mx-auto shadow-hard-3" {...rest}>
@@ -42,15 +42,11 @@ export function FinancialFlowChart({ ...rest }: Props) {
                     Data inicial
                   </FormControlLabelText>
                 </FormControlLabel>
-                <Input className="flex-1 bg-[#fb8c00] rounded-lg" isReadOnly>
-                  <InputField className="text-white" value="10/01/2020" />
-                  <Feather
-                    name="calendar"
-                    color="#FFFFFF"
-                    size={16}
-                    className="mr-2"
-                  />
-                </Input>
+                <InputDate
+                  className="bg-custom-my-input-orange"
+                  date={startDate}
+                  setDate={setStartDate}
+                />
               </VStack>
               <VStack className="flex-1">
                 <FormControlLabel>
@@ -58,15 +54,11 @@ export function FinancialFlowChart({ ...rest }: Props) {
                     Data final
                   </FormControlLabelText>
                 </FormControlLabel>
-                <Input className="flex-1 bg-[#fb8c00] rounded-lg" isReadOnly>
-                  <InputField className="text-white" value="10/01/2020" />
-                  <Feather
-                    name="calendar"
-                    color="#FFFFFF"
-                    size={16}
-                    className="mr-2"
-                  />
-                </Input>
+                <InputDate
+                  className="bg-custom-my-input-orange"
+                  date={endDate}
+                  setDate={setEndDate}
+                />
               </VStack>
             </HStack>
           </FormControl>

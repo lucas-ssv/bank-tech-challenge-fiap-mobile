@@ -32,7 +32,8 @@ module.exports = {
           "my-services-card-bg": "#F2F2F2",
           "my-input-border": "#DEE9EA",
           "my-extract-date-color": "#8B8B8B",
-          "my-placeholder": "#444444"
+          "my-placeholder": "#444444",
+          "my-input-orange": "#F88C00"
         },
         primary: {
           0: 'rgb(var(--color-primary-0)/<alpha-value>)',
