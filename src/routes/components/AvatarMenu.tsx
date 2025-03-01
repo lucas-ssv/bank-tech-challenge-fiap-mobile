@@ -1,6 +1,6 @@
 import React from 'react'
 import { Pressable } from 'react-native'
-import { Menu, Icon, MenuItem, MenuItemLabel } from './ui'
+import { Menu, Icon, MenuItem, MenuItemLabel } from '@/components/ui'
 import Feather from '@expo/vector-icons/Feather'
 import Avatar from '@/assets/avatar.svg'
 
