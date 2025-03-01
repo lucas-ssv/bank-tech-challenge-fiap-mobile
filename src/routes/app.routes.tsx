@@ -1,7 +1,6 @@
-import { Dashboard } from '@/screens'
+import { Dashboard, Servicos } from '@/screens'
 import { createDrawerNavigator } from '@react-navigation/drawer'
-import { AvatarMenu } from '@/components'
-import { Drawer } from './components'
+import { AvatarMenu, Drawer } from './components'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 
 const { Navigator, Screen } = createDrawerNavigator()
@@ -43,6 +42,21 @@ export function AppRoutes() {
             return (
               <MaterialIcons
                 name="account-balance"
+                size={props.size}
+                color={props.color}
+              />
+            )
+          },
+        }}
+      />
+      <Screen
+        name="Serviços"
+        component={Servicos}
+        options={{
+          drawerIcon(props) {
+            return (
+              <MaterialIcons
+                name="inventory"
                 size={props.size}
                 color={props.color}
               />

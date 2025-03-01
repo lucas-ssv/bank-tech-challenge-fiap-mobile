@@ -38,7 +38,7 @@ type Props = ComponentProps<typeof Box>
 export function NewTransaction({ className, ...rest }: Props) {
   return (
     <Box
-      className={`min-h-[655px] bg-custom-my-gray-box py-8 px-4 rounded-lg overflow-hidden ${className}`}
+      className={`min-h-[655px] bg-custom-my-gray-box py-8 px-4 rounded-lg overflow-hidden mt-6 ${className}`}
       {...rest}
     >
       <Pixels

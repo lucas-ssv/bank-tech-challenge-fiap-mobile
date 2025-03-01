@@ -21,7 +21,7 @@ export function FinancialFlowChart({ ...rest }: Props) {
   const [endDate, setEndDate] = useState<Date>(new Date())
 
   return (
-    <Box className="flex-1 mx-auto shadow-hard-3" {...rest}>
+    <Box className="flex-1 mx-auto shadow-hard-3 mt-6" {...rest}>
       <LinearGradient
         start={[-0.5, 0]}
         end={[1, 0]}
