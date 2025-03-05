@@ -1,22 +1,25 @@
-import React from 'react'
+import React, { ComponentProps } from 'react'
 import { Pressable } from 'react-native'
 import { Menu, Icon, MenuItem, MenuItemLabel } from '@/components/ui'
 import Feather from '@expo/vector-icons/Feather'
 import Avatar from '@/assets/avatar.svg'
 
-export function AvatarMenu() {
+type Props = Omit<ComponentProps<typeof Menu>, 'trigger'>
+
+export function AvatarMenu({ ...rest }: Props) {
   return (
     <Menu
       placement="bottom"
-      className="border border-custom-my-dark-green bg-black rounded-lg"
+      className="border border-custom-my-dark-green bg-black rounded-lg z-50"
       offset={5}
       trigger={({ ...triggerProps }) => {
         return (
-          <Pressable {...triggerProps}>
+          <Pressable className="" {...triggerProps}>
             <Icon as={Avatar} className="w-10 h-10 text-typography-[#FF5031]" />
           </Pressable>
         )
       }}
+      {...rest}
     >
       <MenuItem
         key="Minha conta"
