@@ -9,7 +9,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 
 type Props = DrawerContentComponentProps
 
-export function Drawer(props: Props) {
+export function DrawerContent(props: Props) {
   return (
     <DrawerContentScrollView
       bounces={false}
