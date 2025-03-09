@@ -1,10 +1,10 @@
 import { Dashboard, MeusCartoes, Servicos } from '@/screens'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { AvatarMenu } from '@/routes/app/(drawer)/components'
 import Feather from '@expo/vector-icons/Feather'
 import { DrawerActions } from '@react-navigation/native'
 import { DrawerScreenProps } from '@react-navigation/drawer'
 import { DrawerParamList } from '@/@types/navigation'
+import { AvatarMenu } from './components'
 
 type Props = DrawerScreenProps<DrawerParamList, 'StackRoutes'>
 
