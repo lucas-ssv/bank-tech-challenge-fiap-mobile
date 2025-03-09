@@ -2,6 +2,7 @@ import { Icon, Pressable, Text, VStack } from '@/components/ui'
 import {
   DrawerContentComponentProps,
   DrawerContentScrollView,
+  DrawerItem,
   DrawerItemList,
 } from '@react-navigation/drawer'
 import Avatar from '@/assets/avatar.svg'
@@ -35,6 +36,18 @@ export function DrawerContent(props: Props) {
 
       <VStack className="p-4">
         <DrawerItemList {...props} />
+        <DrawerItem
+          label="Outros serviços"
+          labelStyle={{
+            color: '#004D61',
+          }}
+          style={{
+            borderRadius: 8,
+          }}
+          onPress={() =>
+            props.navigation.navigate('StackRoutes', { screen: 'Servicos' })
+          }
+        />
       </VStack>
     </DrawerContentScrollView>
   )
