@@ -1,11 +1,11 @@
 import { createDrawerNavigator } from '@react-navigation/drawer'
 import { AvatarMenu, DrawerContent } from '@/routes/app/(drawer)/components'
 import { StackRoutes } from '../(stack)'
-import { Dashboard } from '@/screens'
 import Feather from '@expo/vector-icons/Feather'
 import { DrawerActions, useNavigation } from '@react-navigation/native'
+import { DrawerParamList } from '@/@types/navigation'
 
-const { Navigator, Screen } = createDrawerNavigator()
+const { Navigator, Screen } = createDrawerNavigator<DrawerParamList>()
 
 export function DrawerRoutes() {
   const navigation = useNavigation()
@@ -42,7 +42,7 @@ export function DrawerRoutes() {
         drawerItemStyle: {
           borderRadius: 8,
         },
-        drawerActiveBackgroundColor: '#FFFFFF',
+        drawerActiveBackgroundColor: 'transparent',
         drawerActiveTintColor: '#004D61',
         drawerStyle: {
           backgroundColor: '#E4EDE3',
@@ -50,16 +50,12 @@ export function DrawerRoutes() {
       }}
     >
       <Screen
-        name="Dashboard"
-        component={Dashboard}
-        options={{
-          title: 'Início',
-        }}
-      />
-      <Screen
         name="StackRoutes"
         component={StackRoutes}
-        options={{ headerShown: false, title: 'Outros serviços' }}
+        options={{
+          headerShown: false,
+          title: 'Início',
+        }}
       />
     </Navigator>
   )
