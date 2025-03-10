@@ -7,6 +7,7 @@ import {
   Inter_700Bold,
   Inter_600SemiBold,
 } from '@expo-google-fonts/inter'
+import { Montserrat_400Regular } from '@expo-google-fonts/montserrat'
 import { useEffect } from 'react'
 import * as SplashScreen from 'expo-splash-screen'
 
@@ -21,6 +22,7 @@ export default function App() {
     Inter_500Medium,
     Inter_600SemiBold,
     Inter_700Bold,
+    Montserrat_400Regular,
   })
 
   useEffect(() => {

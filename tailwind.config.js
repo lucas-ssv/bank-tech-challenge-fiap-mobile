@@ -33,7 +33,8 @@ module.exports = {
           "my-input-border": "#DEE9EA",
           "my-extract-date-color": "#8B8B8B",
           "my-placeholder": "#444444",
-          "my-input-orange": "#F88C00"
+          "my-input-orange": "#F88C00",
+          "my-card-title": "#2F2E41"
         },
         primary: {
           0: 'rgb(var(--color-primary-0)/<alpha-value>)',
@@ -195,7 +196,9 @@ module.exports = {
         body: 'Inter_400Regular',
         medium: 'Inter_500Medium',
         semibold: 'Inter_600SemiBold',
+        body_montserrat: 'Montserrat_400Regular',
         inter: ['Inter_400Regular', 'Inter_500Medium', 'Inter_600SemiBold', 'Inter_700Bold'],
+        montserrat: ['Montserrat_400Regular'],
       },
       fontWeight: {
         extrablack: '950',
