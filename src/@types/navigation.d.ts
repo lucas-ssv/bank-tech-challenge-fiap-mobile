@@ -1,6 +1,7 @@
 export type StackParamList = {
   MeusCartoes: undefined
   Servicos: undefined
+  Profile: undefined
 }
 
 export type DrawerParamList = {
