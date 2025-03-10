@@ -5,8 +5,11 @@ import { ScrollView } from 'react-native'
 
 export function Dashboard() {
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
-      <VStack className="flex-1 bg-custom-my-light-green p-6">
+    <ScrollView
+      className="bg-custom-my-light-green"
+      showsVerticalScrollIndicator={false}
+    >
+      <VStack className="flex-1  p-6">
         <Welcome />
         <NewTransaction />
         <FinancialFlowChart />
