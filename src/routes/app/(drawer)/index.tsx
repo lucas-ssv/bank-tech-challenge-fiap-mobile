@@ -2,6 +2,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer'
 import { AvatarMenu, DrawerContent } from '@/routes/app/(drawer)/components'
 import { StackRoutes } from '../(stack)'
 import { Dashboard } from '@/screens'
+import { Home } from '@/screens'
 import Feather from '@expo/vector-icons/Feather'
 import { DrawerActions, useNavigation } from '@react-navigation/native'
 
@@ -60,6 +61,11 @@ export function DrawerRoutes() {
         name="StackRoutes"
         component={StackRoutes}
         options={{ headerShown: false, title: 'Outros serviços' }}
+      />
+      <Screen
+        name="Home"
+        component={Home}
+        options={{ headerShown: false, title: 'Home' }}
       />
     </Navigator>
   )
