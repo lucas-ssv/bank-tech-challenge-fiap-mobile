@@ -1,68 +1,69 @@
-import { MeusCartoes, Servicos } from '@/screens'
+import { Dashboard, MeusCartoes, Profile, Servicos } from '@/screens'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { AvatarMenu } from '@/routes/app/(drawer)/components'
 import Feather from '@expo/vector-icons/Feather'
-import { HStack } from '@/components/ui'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import { DrawerActions } from '@react-navigation/native'
-import { RectButton } from 'react-native-gesture-handler'
+import { DrawerScreenProps } from '@react-navigation/drawer'
+import { DrawerParamList } from '@/@types/navigation'
+import { AvatarMenu } from './components'
 
-type StackParamList = {
-  MeusCartoes: undefined
-  Servicos: undefined
-}
-
-type DrawerParamList = {
-  StackRoutes: {
-    screen: keyof StackParamList
-  }
-}
-
-declare global {
-  namespace ReactNavigation {
-    interface RootParamList extends DrawerParamList {}
-  }
-}
+type Props = DrawerScreenProps<DrawerParamList, 'StackRoutes'>
 
 const { Navigator, Screen } = createNativeStackNavigator()
 
-export function StackRoutes() {
+export function StackRoutes({ navigation }: Props) {
   return (
     <Navigator
       screenOptions={{
-        title: '',
         headerStyle: {
           backgroundColor: '#004D61',
         },
+        headerTitleAlign: 'center',
         headerTintColor: '#FF5031',
-        header({ navigation }) {
-          return (
-            <SafeAreaView className="bg-custom-my-dark-green elevation-lg">
-              <HStack className="items-center justify-between px-6 py-4">
-                <HStack className="items-center gap-4">
-                  <Feather
-                    name="menu"
-                    color="#FF5031"
-                    size={20}
-                    onPress={() =>
-                      navigation.dispatch(DrawerActions.openDrawer())
-                    }
-                  />
-                  {navigation.canGoBack() && (
-                    <RectButton onPress={() => navigation.goBack()}>
-                      <Feather name="arrow-left" color="#FF5031" size={20} />
-                    </RectButton>
-                  )}
-                </HStack>
-                <AvatarMenu />
-              </HStack>
-            </SafeAreaView>
-          )
+        headerBackButtonDisplayMode: 'minimal',
+        headerBackVisible: true,
+        headerRight() {
+          return <AvatarMenu />
         },
       }}
     >
-      <Screen name="Servicos" component={Servicos} />
-      <Screen name="MeusCartoes" component={MeusCartoes} />
+      <Screen
+        name="Dashboard"
+        component={Dashboard}
+        options={{
+          title: 'Início',
+          headerLeft() {
+            return (
+              <Feather
+                name="menu"
+                color="#FF5031"
+                size={20}
+                onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
+              />
+            )
+          },
+        }}
+      />
+      <Screen
+        name="Servicos"
+        component={Servicos}
+        options={{
+          title: 'Serviços',
+        }}
+      />
+      <Screen
+        name="MeusCartoes"
+        component={MeusCartoes}
+        options={{
+          title: 'Meus cartões',
+        }}
+      />
+      <Screen
+        name="Profile"
+        component={Profile}
+        options={{
+          title: 'Meu perfil',
+        }}
+      />
     </Navigator>
   )
 }
