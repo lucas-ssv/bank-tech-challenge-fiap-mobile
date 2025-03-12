@@ -26,10 +26,6 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": [
-      "expo-font",
-      "@react-native-firebase/app",
-      "@react-native-firebase/auth"
-    ]
+    "plugins": ["expo-font"]
   }
 }
