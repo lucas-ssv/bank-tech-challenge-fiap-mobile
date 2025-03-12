@@ -8,7 +8,6 @@ export function Header() {
   return (
     <Box className="bg-black p-10 pt-24">
       <HStack className="w-full flex justify-between">
-        {/* <Menu/> */}
         <Logo />
       </HStack>
     </Box>

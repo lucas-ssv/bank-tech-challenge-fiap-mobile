@@ -5,24 +5,24 @@ import {
   ModalContent,
   ModalHeader,
   ModalBody,
-} from '@/components/ui'
-
-import { Button, ButtonText } from '@/components/ui'
-import { Box } from '@/components/ui'
-import { Heading } from '@/components/ui'
-import { CloseIcon, Icon } from '@/components/ui'
-import { Text } from '@/components/ui'
-
-import {
+  Button,
+  ButtonText,
+  Box,
+  Heading,
+  CloseIcon,
+  Icon,
+  Text,
   FormControl,
   FormControlLabel,
   FormControlLabelText,
+  Input,
+  InputField,
+  VStack,
 } from '@/components/ui'
 
-import { Input, InputField } from '@/components/ui'
-import { VStack } from '@/components/ui'
 import IluNovaConta from '@/assets/cadastro.svg'
 import { signUp } from '@/firebase/auth'
+import { View } from 'react-native'
 
 const ModalCriarConta = () => {
   const [showModal, setShowModal] = useState(false)
@@ -40,15 +40,12 @@ const ModalCriarConta = () => {
   }
 
   return (
-    <Box>
+    <Box className="flex-1">
       <Button
-        size="lg"
-        variant="solid"
-        action="primary"
-        className="bg-black"
+        className="h-12 w-full bg-black rounded-lg"
         onPress={() => setShowModal(true)}
       >
-        <ButtonText>Abrir conta</ButtonText>
+        <ButtonText className="text-md">Abrir conta</ButtonText>
       </Button>
 
       <Modal
@@ -60,7 +57,7 @@ const ModalCriarConta = () => {
       >
         <ModalBackdrop />
 
-        <ModalContent className={'absolute top-20'}>
+        <ModalContent>
           <ModalHeader className="w-full flex justify-end">
             <Text
               onPress={() => {
@@ -76,48 +73,51 @@ const ModalCriarConta = () => {
           </ModalHeader>
 
           <ModalBody>
-            <Box className="w-[50px] max-w-[50px]">
-              <IluNovaConta />
-            </Box>
+            <View className="self-center">
+              <IluNovaConta width={293} height={216} />
+            </View>
 
-            <Heading className="text-left text-lg">
+            <Heading className="text-left text-lg mt-8">
               Preencha os campos abaixo para criar sua conta corrente!
             </Heading>
 
-            <VStack className="w-full mt-6">
+            <VStack className="w-full mt-8">
               <FormControl>
                 <FormControlLabel>
-                  <FormControlLabelText className="font-bold">
+                  <FormControlLabelText className="text-md font-bold">
                     Nome
                   </FormControlLabelText>
                 </FormControlLabel>
-                <Input variant="outline" size="md">
+                <Input className="h-12 bg-white border border-custom-my-input-border rounded-lg mt-2">
                   <InputField
+                    className="text-md"
                     onChangeText={setName}
                     value={name}
                     placeholder="Digite seu Nome"
                   />
                 </Input>
-                <FormControlLabel className="mt-8">
+                <FormControlLabel className="mt-6">
                   <FormControlLabelText className="font-bold">
                     Email
                   </FormControlLabelText>
                 </FormControlLabel>
-                <Input variant="outline" size="md">
+                <Input className="h-12 bg-white border border-custom-my-input-border rounded-lg mt-2">
                   <InputField
+                    className="text-md"
                     onChangeText={setEmail}
                     value={email}
                     placeholder="Digite seu email"
                   />
                 </Input>
-                <FormControlLabel className="mt-8">
+                <FormControlLabel className="mt-6">
                   <FormControlLabelText className="font-bold">
                     Senha
                   </FormControlLabelText>
                 </FormControlLabel>
 
-                <Input className="my-1">
+                <Input className="h-12 bg-white border border-custom-my-input-border rounded-lg mt-2">
                   <InputField
+                    className="text-md"
                     type="password"
                     placeholder="Digita sua senha"
                     onChangeText={setPassword}
@@ -126,11 +126,10 @@ const ModalCriarConta = () => {
                 </Input>
               </FormControl>
               <Button
-                className="w-fit self-center mt-4"
-                size="sm"
+                className="h-12 bg-custom-my-orange rounded-lg mt-8"
                 onPress={handleSignUp}
               >
-                <ButtonText>Criar conta</ButtonText>
+                <ButtonText className="text-md">Criar conta</ButtonText>
               </Button>
             </VStack>
           </ModalBody>
