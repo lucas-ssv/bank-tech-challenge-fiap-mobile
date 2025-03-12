@@ -15,6 +15,7 @@ import { Routes } from '@/routes'
 import { GluestackUIProvider } from '@/components/ui/gluestack-ui-provider'
 import '@/styles/global.css'
 import 'react-native-gesture-handler'
+import { AuthProvider } from '@/contexts'
 
 export default function App() {
   const [loaded, error] = useFonts({
@@ -37,8 +38,10 @@ export default function App() {
 
   return (
     <GluestackUIProvider mode="light">
-      <Routes />
-      <StatusBar style="light" />
+      <AuthProvider>
+        <Routes />
+        <StatusBar style="light" />
+      </AuthProvider>
     </GluestackUIProvider>
   )
 }
