@@ -1,4 +1,9 @@
-import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  updateProfile
+} from 'firebase/auth'
 import { addDoc, collection, Timestamp } from 'firebase/firestore'
 import { auth, db } from './config'
 import { userConverter } from './converters'
@@ -17,4 +22,13 @@ export const signUp = async (name: string, email: string, password: string) => {
   })
 
   return user
+}
+
+export const login = async (email: string, password: string) => {
+  const { user } = await signInWithEmailAndPassword(auth, email, password)
+  return user
+}
+
+export const logout = async () => {
+  await signOut(auth)
 }
