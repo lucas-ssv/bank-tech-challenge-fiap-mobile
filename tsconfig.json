@@ -3,8 +3,21 @@
   "compilerOptions": {
     "strict": true,
     "paths": {
-      "@/*": ["./src/*"],
-      "tailwind.config": ["./tailwind.config.js"]
+      "@/*": [
+        "./src/*"
+      ],
+      "tailwind.config": [
+        "./tailwind.config.js"
+      ],
+      "@firebase/auth": [
+        "./node_modules/@firebase/auth/dist/index.rn.d.ts"
+      ]
     }
-  }
+  },
+  "include": [
+    "src/**/*",
+    "App.tsx",
+    "env.d.ts",
+    "nativewind-env.d.ts"
+  ]
 }

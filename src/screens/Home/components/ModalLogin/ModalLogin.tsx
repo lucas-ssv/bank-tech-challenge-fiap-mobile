@@ -1,16 +1,21 @@
-import React, { useState } from "react";
+import React, { useState } from 'react'
 import {
   Modal,
   ModalBackdrop,
   ModalContent,
   ModalHeader,
   ModalBody,
-} from "@/components/ui/modal"
+} from '@/components/ui/modal'
 
-// import { CloseIcon, Icon } from "../ui/icon";
-
-import { Box, Button, ButtonText, Heading, Icon } from "@/components/ui";
-
+import {
+  Box,
+  Button,
+  ButtonText,
+  CloseIcon,
+  Heading,
+  Icon,
+  Text,
+} from '@/components/ui'
 
 import {
   FormControl,
@@ -18,83 +23,95 @@ import {
   FormControlLabelText,
   FormControlHelper,
   FormControlHelperText,
-} from "@/components/ui/form-control"
+} from '@/components/ui/form-control'
 
-import { Input, InputField } from "@/components/ui/input"
-import { VStack } from "@/components/ui/vstack"
+import { Input, InputField } from '@/components/ui/input'
+import { VStack } from '@/components/ui/vstack'
 
 import BannerLogin from '@/assets/login.svg'
-
+import { login } from '@/firebase/auth'
 
 const ModalLogin = () => {
   const [showModal, setShowModal] = useState(false)
-  const [isInvalid, setIsInvalid] = useState(false)
-  const [inputValue, setInputValue] = useState("12345")
-  const handleSubmit = () => {
-    if (inputValue.length < 6) {
-      setIsInvalid(true)
-    } else {
-      setIsInvalid(false)
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+
+  const handleLogin = async () => {
+    try {
+      const user = await login(email, password)
+      console.log(user)
+    } catch (error) {
+      console.error(error)
     }
   }
+
   return (
     <Box>
-      <Button size="lg" variant="outline" action="primary" className='text-black border-black' onPress={() => setShowModal(true)}>
-        <ButtonText>
-          Ja tenho conta
-        </ButtonText>
+      <Button
+        size="lg"
+        variant="outline"
+        action="primary"
+        className="text-black border-black"
+        onPress={() => setShowModal(true)}
+      >
+        <ButtonText>Ja tenho conta</ButtonText>
       </Button>
 
-      <Modal isOpen={showModal} onClose={() => {setShowModal(false)}}size="md">
+      <Modal
+        isOpen={showModal}
+        onClose={() => {
+          setShowModal(false)
+        }}
+        size="md"
+      >
         <ModalBackdrop />
-        
+
         <ModalContent className={'absolute top-20'}>
           <ModalHeader className="w-full flex justify-end">
-            {/* <Text onPress={() => {setShowModal(false)}}>
+            <Text
+              onPress={() => {
+                setShowModal(false)
+              }}
+            >
               <Icon
                 as={CloseIcon}
                 size="md"
                 className="stroke-background-400 group-[:hover]/modal-close-button:stroke-background-700 group-[:active]/modal-close-button:stroke-background-900 group-[:focus-visible]/modal-close-button:stroke-background-900"
-                />
-            </Text> */}
+              />
+            </Text>
           </ModalHeader>
 
           <ModalBody>
-            <BannerLogin/>
-            
-            <Heading className="text-center">
-              Login
-            </Heading>
+            <BannerLogin />
+
+            <Heading className="text-center">Login</Heading>
 
             <VStack className="w-full mt-6">
-
-            <FormControl
-                isInvalid={isInvalid}
-                size="md"
-                isDisabled={false}
-                isReadOnly={false}
-                isRequired={true}>
-              <FormControlLabel>
-                <FormControlLabelText className="font-bold"> Email</FormControlLabelText>
-              </FormControlLabel>
-              <Input
-                variant="outline"
-                size="md"
-                isDisabled={false}
-                isInvalid={false}
-                isReadOnly={false}>
-            <InputField placeholder="Digite seu email" />
-              </Input>
-                <FormControlLabel className="mt-8">
-                  <FormControlLabelText className="font-bold">Senha</FormControlLabelText>
+              <FormControl>
+                <FormControlLabel>
+                  <FormControlLabelText className="font-bold">
+                    Email
+                  </FormControlLabelText>
                 </FormControlLabel>
-                
+                <Input variant="outline" size="md">
+                  <InputField
+                    onChangeText={setEmail}
+                    value={email}
+                    placeholder="Digite seu email"
+                  />
+                </Input>
+                <FormControlLabel className="mt-8">
+                  <FormControlLabelText className="font-bold">
+                    Senha
+                  </FormControlLabelText>
+                </FormControlLabel>
+
                 <Input className="my-1">
                   <InputField
                     type="password"
                     placeholder="Digita sua senha"
-                    value={inputValue}
-                    onChangeText={(text) => setInputValue(text)}
+                    value={password}
+                    onChangeText={setPassword}
                   />
                 </Input>
                 <FormControlHelper>
@@ -102,18 +119,20 @@ const ModalLogin = () => {
                     Esqueci a senha!
                   </FormControlHelperText>
                 </FormControlHelper>
-               
               </FormControl>
-              <Button className="w-fit self-center mt-4" size="sm" onPress={handleSubmit}>
+              <Button
+                className="w-fit self-center mt-4"
+                size="sm"
+                onPress={handleLogin}
+              >
                 <ButtonText>Entrar</ButtonText>
               </Button>
             </VStack>
           </ModalBody>
         </ModalContent>
       </Modal>
-  </Box>
+    </Box>
+  )
+}
 
-  );
-};
-
-export default ModalLogin;
+export default ModalLogin

@@ -8,6 +8,7 @@ node_modules/
 dist/
 web-build/
 expo-env.d.ts
+.env
 
 # Native
 *.orig.*
@@ -35,3 +36,6 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 coverage
+
+#firebase
+google-services.json
