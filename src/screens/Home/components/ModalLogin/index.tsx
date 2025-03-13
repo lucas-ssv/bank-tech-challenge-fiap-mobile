@@ -24,7 +24,7 @@ import BannerLogin from '@/assets/login.svg'
 import { login } from '@/firebase/auth'
 import { View } from 'react-native'
 
-const ModalLogin = () => {
+export function ModalLogin() {
   const [showModal, setShowModal] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -129,5 +129,3 @@ const ModalLogin = () => {
     </Box>
   )
 }
-
-export default ModalLogin

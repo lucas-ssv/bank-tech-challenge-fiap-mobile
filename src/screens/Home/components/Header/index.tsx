@@ -2,7 +2,6 @@ import React from 'react'
 import { Box } from '@/components/ui/box'
 import { HStack } from '@/components/ui/hstack'
 import Logo from '@/assets/logo.svg'
-// import Menu from "@/Menu/Menu";
 
 export function Header() {
   return (

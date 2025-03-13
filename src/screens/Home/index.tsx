@@ -2,10 +2,7 @@ import { Box, Heading, HStack, Text, VStack } from '@/components/ui'
 import { ScrollView, View } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 
-import { Header } from './components/Header/Header'
-import Footer from './components/Footer/Footer'
-import ModalCriarConta from './components/ModalCriarConta/ModalCriarConta'
-import ModalLogin from './components/ModalLogin/ModalLogin'
+import { Footer, ModalCriarConta, ModalLogin } from './components'
 
 import IlustracaoBanner from '@/assets/ilustracao-banner.svg'
 import Gift from '@/assets/presente.svg'
@@ -21,7 +18,6 @@ export function Home() {
     >
       <VStack className="flex-1">
         <LinearGradient className="flex-1" colors={['#004D61', '#FFFFFF']}>
-          <Header />
           <Box className="px-6 py-10">
             <Heading className="text-black text-center text-xl">
               Experimente mais liberdade no controle da sua vida financeira.

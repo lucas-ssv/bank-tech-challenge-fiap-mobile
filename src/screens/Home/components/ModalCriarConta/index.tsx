@@ -24,7 +24,7 @@ import IluNovaConta from '@/assets/cadastro.svg'
 import { signUp } from '@/firebase/auth'
 import { View } from 'react-native'
 
-const ModalCriarConta = () => {
+export function ModalCriarConta() {
   const [showModal, setShowModal] = useState(false)
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -138,5 +138,3 @@ const ModalCriarConta = () => {
     </Box>
   )
 }
-
-export default ModalCriarConta

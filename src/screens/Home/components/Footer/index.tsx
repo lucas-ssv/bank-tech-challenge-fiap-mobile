@@ -8,7 +8,7 @@ import Youtube from '@/assets/youtube.svg'
 import { Linking, View } from 'react-native'
 import { Box, Heading, HStack, Text } from '@/components/ui'
 
-const Footer = () => {
+export function Footer() {
   return (
     <Box className="bg-black py-6 px-16">
       <Heading className="text-white text-md">Serviços</Heading>
@@ -53,5 +53,3 @@ const Footer = () => {
     </Box>
   )
 }
-
-export default Footer
