@@ -11,7 +11,6 @@ import {
   Box,
   Button,
   ButtonText,
-  CloseIcon,
   Heading,
   Icon,
   Text,
@@ -21,6 +20,7 @@ import {
 } from '@/components/ui'
 
 import BannerLogin from '@/assets/login.svg'
+import CloseIcon from '@/assets/close-black.svg'
 import { login } from '@/firebase/auth'
 import { View } from 'react-native'
 
@@ -66,7 +66,7 @@ export function ModalLogin() {
             >
               <Icon
                 as={CloseIcon}
-                size="md"
+                size="sm"
                 className="stroke-background-400 group-[:hover]/modal-close-button:stroke-background-700 group-[:active]/modal-close-button:stroke-background-900 group-[:focus-visible]/modal-close-button:stroke-background-900"
               />
             </Text>

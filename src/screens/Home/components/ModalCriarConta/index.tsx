@@ -9,7 +9,6 @@ import {
   ButtonText,
   Box,
   Heading,
-  CloseIcon,
   Icon,
   Text,
   FormControl,
@@ -21,6 +20,7 @@ import {
 } from '@/components/ui'
 
 import IluNovaConta from '@/assets/cadastro.svg'
+import CloseIcon from '@/assets/close-black.svg'
 import { signUp } from '@/firebase/auth'
 import { View } from 'react-native'
 
@@ -66,7 +66,7 @@ export function ModalCriarConta() {
             >
               <Icon
                 as={CloseIcon}
-                size="md"
+                size="sm"
                 className="stroke-background-400 group-[:hover]/modal-close-button:stroke-background-700 group-[:active]/modal-close-button:stroke-background-900 group-[:focus-visible]/modal-close-button:stroke-background-900"
               />
             </Text>
