@@ -17,18 +17,22 @@ import {
   Input,
   InputField,
   VStack,
+  HStack,
+  Pressable,
 } from '@/components/ui'
 
 import IluNovaConta from '@/assets/cadastro.svg'
 import CloseIcon from '@/assets/close-black.svg'
 import { signUp } from '@/firebase/auth'
 import { View } from 'react-native'
+import Checkbox from 'expo-checkbox'
 
 export function ModalCriarConta() {
   const [showModal, setShowModal] = useState(false)
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [checked, setChecked] = useState(false)
 
   const handleSignUp = async () => {
     try {
@@ -127,6 +131,22 @@ export function ModalCriarConta() {
                     value={password}
                   />
                 </Input>
+
+                <Pressable onPress={() => setChecked(!checked)}>
+                  <HStack className="items-center gap-4 mt-8">
+                    <Checkbox
+                      color="#47A138"
+                      className="!border-custom-my-green !rounded-[5px]"
+                      onValueChange={setChecked}
+                      value={checked}
+                    />
+                    <Text className="flex-1 text-md text-black">
+                      Li e estou ciente quanto às condições de tratamento dos
+                      meus dados conforme descrito na Política de Privacidade do
+                      banco.
+                    </Text>
+                  </HStack>
+                </Pressable>
               </FormControl>
               <Button
                 className="h-12 bg-custom-my-orange rounded-lg mt-8"
