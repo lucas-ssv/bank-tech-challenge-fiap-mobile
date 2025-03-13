@@ -72,7 +72,10 @@ export function ModalLogin() {
             </Text>
           </ModalHeader>
 
-          <ModalBody>
+          <ModalBody
+            automaticallyAdjustKeyboardInsets
+            showsVerticalScrollIndicator={false}
+          >
             <View className="self-center">
               <BannerLogin width={293} height={216} />
             </View>

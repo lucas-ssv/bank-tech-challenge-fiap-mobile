@@ -72,7 +72,10 @@ export function ModalCriarConta() {
             </Text>
           </ModalHeader>
 
-          <ModalBody>
+          <ModalBody
+            automaticallyAdjustKeyboardInsets
+            showsVerticalScrollIndicator={false}
+          >
             <View className="self-center">
               <IluNovaConta width={293} height={216} />
             </View>
