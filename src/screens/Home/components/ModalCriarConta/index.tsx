@@ -19,7 +19,12 @@ import {
   VStack,
   HStack,
   Pressable,
+  FormControlError,
+  FormControlErrorText,
 } from '@/components/ui'
+import { z } from 'zod'
+import { Controller, useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 import IluNovaConta from '@/assets/cadastro.svg'
 import CloseIcon from '@/assets/close-black.svg'
@@ -27,14 +32,35 @@ import { signUp } from '@/firebase/auth'
 import { View } from 'react-native'
 import Checkbox from 'expo-checkbox'
 
-export function ModalCriarConta() {
-  const [showModal, setShowModal] = useState(false)
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [checked, setChecked] = useState(false)
+type SignUpData = z.infer<typeof schema>
 
-  const handleSignUp = async () => {
+const schema = z.object({
+  name: z
+    .string({ message: 'O nome é obrigatório' })
+    .min(2, { message: 'O nome deve conter pelo menos 2 caracteres' }),
+  email: z
+    .string({ message: 'O e-mail é obrigatório' })
+    .email({ message: 'Endereço de e-mail inválido' }),
+  password: z
+    .string({ message: 'A senha é obrigatória' })
+    .min(6, { message: 'A senha deve conter pelo menos 6 caracteres' }),
+  terms: z.literal<boolean>(true),
+})
+
+export function ModalCriarConta() {
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    getValues,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(schema),
+  })
+  const [showModal, setShowModal] = useState(false)
+
+  const onSignUp = async (data: SignUpData) => {
+    const { name, email, password } = data
     try {
       const credentials = await signUp(name, email, password)
       console.log(credentials)
@@ -58,6 +84,7 @@ export function ModalCriarConta() {
           setShowModal(false)
         }}
         size="lg"
+        className="h-full py-20"
       >
         <ModalBackdrop />
 
@@ -89,56 +116,110 @@ export function ModalCriarConta() {
             </Heading>
 
             <VStack className="w-full mt-8">
-              <FormControl>
+              <FormControl isInvalid={!!errors.name}>
                 <FormControlLabel>
                   <FormControlLabelText className="text-md font-bold">
                     Nome
                   </FormControlLabelText>
                 </FormControlLabel>
-                <Input className="h-12 bg-white border border-custom-my-input-border rounded-lg mt-2">
-                  <InputField
-                    className="text-md"
-                    onChangeText={setName}
-                    value={name}
-                    placeholder="Digite seu Nome"
-                  />
-                </Input>
+                <Controller
+                  control={control}
+                  name="name"
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <Input className="h-12 bg-white border border-custom-my-input-border rounded-lg mt-2">
+                      <InputField
+                        className="text-md"
+                        onChangeText={onChange}
+                        onBlur={onBlur}
+                        value={value}
+                        placeholder="Digite seu nome completo"
+                      />
+                    </Input>
+                  )}
+                />
+                {errors.name && (
+                  <FormControlError>
+                    <FormControlErrorText>
+                      {errors.name.message}
+                    </FormControlErrorText>
+                  </FormControlError>
+                )}
+              </FormControl>
+              <FormControl isInvalid={!!errors.email}>
                 <FormControlLabel className="mt-6">
                   <FormControlLabelText className="font-bold">
                     Email
                   </FormControlLabelText>
                 </FormControlLabel>
-                <Input className="h-12 bg-white border border-custom-my-input-border rounded-lg mt-2">
-                  <InputField
-                    className="text-md"
-                    onChangeText={setEmail}
-                    value={email}
-                    placeholder="Digite seu email"
-                  />
-                </Input>
+                <Controller
+                  control={control}
+                  name="email"
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <Input className="h-12 bg-white border border-custom-my-input-border rounded-lg mt-2">
+                      <InputField
+                        className="text-md"
+                        onChangeText={onChange}
+                        onBlur={onBlur}
+                        value={value}
+                        placeholder="Digite seu email"
+                      />
+                    </Input>
+                  )}
+                />
+                {errors.email && (
+                  <FormControlError>
+                    <FormControlErrorText>
+                      {errors.email.message}
+                    </FormControlErrorText>
+                  </FormControlError>
+                )}
+              </FormControl>
+              <FormControl isInvalid={!!errors.password}>
                 <FormControlLabel className="mt-6">
                   <FormControlLabelText className="font-bold">
                     Senha
                   </FormControlLabelText>
                 </FormControlLabel>
 
-                <Input className="h-12 bg-white border border-custom-my-input-border rounded-lg mt-2">
-                  <InputField
-                    className="text-md"
-                    type="password"
-                    placeholder="Digita sua senha"
-                    onChangeText={setPassword}
-                    value={password}
-                  />
-                </Input>
+                <Controller
+                  control={control}
+                  name="password"
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <Input className="h-12 bg-white border border-custom-my-input-border rounded-lg mt-2">
+                      <InputField
+                        className="text-md"
+                        type="password"
+                        placeholder="Digite sua senha"
+                        onChangeText={onChange}
+                        onBlur={onBlur}
+                        value={value}
+                      />
+                    </Input>
+                  )}
+                />
+                {errors.password && (
+                  <FormControlError>
+                    <FormControlErrorText>
+                      {errors.password.message}
+                    </FormControlErrorText>
+                  </FormControlError>
+                )}
+              </FormControl>
 
-                <Pressable onPress={() => setChecked(!checked)}>
+              <Pressable onPress={() => setValue('terms', !getValues('terms'))}>
+                <FormControl isInvalid={!!errors.terms}>
                   <HStack className="items-center gap-4 mt-8">
-                    <Checkbox
-                      color="#47A138"
-                      className="!border-custom-my-green !rounded-[5px]"
-                      onValueChange={setChecked}
-                      value={checked}
+                    <Controller
+                      control={control}
+                      name="terms"
+                      render={({ field: { onChange, value } }) => (
+                        <Checkbox
+                          color="#47A138"
+                          className={`${errors.terms ? '!border-custom-my-dark-red' : '!border-custom-my-green'} !rounded-[5px]`}
+                          onValueChange={onChange}
+                          value={value}
+                        />
+                      )}
                     />
                     <Text className="flex-1 text-md text-black">
                       Li e estou ciente quanto às condições de tratamento dos
@@ -146,11 +227,12 @@ export function ModalCriarConta() {
                       banco.
                     </Text>
                   </HStack>
-                </Pressable>
-              </FormControl>
+                </FormControl>
+              </Pressable>
+
               <Button
                 className="h-12 bg-custom-my-orange rounded-lg mt-8"
-                onPress={handleSignUp}
+                onPress={handleSubmit(onSignUp)}
               >
                 <ButtonText className="text-md">Criar conta</ButtonText>
               </Button>

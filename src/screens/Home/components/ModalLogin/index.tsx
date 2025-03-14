@@ -54,6 +54,7 @@ export function ModalLogin() {
           setShowModal(false)
         }}
         size="lg"
+        className="h-full py-20"
       >
         <ModalBackdrop />
 
