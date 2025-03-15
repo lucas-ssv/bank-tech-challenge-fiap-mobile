@@ -37,6 +37,18 @@ export function DrawerContent(props: Props) {
       <VStack className="p-4">
         <DrawerItemList {...props} />
         <DrawerItem
+          label="Investimentos"
+          labelStyle={{
+            color: '#004D61',
+          }}
+          style={{
+            borderRadius: 8,
+          }}
+          onPress={() =>
+            props.navigation.navigate('StackRoutes', { screen: 'Investimentos' })
+          }
+        />
+        <DrawerItem
           label="Outros serviços"
           labelStyle={{
             color: '#004D61',
