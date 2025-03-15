@@ -17,7 +17,7 @@ export function AuthDrawerRoutes() {
         headerTitle: '',
         headerStyle: {
           backgroundColor: '#000000',
-          height: 130
+          height: 94,
         },
         headerTintColor: '#47A138',
         headerRight(props) {
@@ -29,7 +29,7 @@ export function AuthDrawerRoutes() {
               name="menu"
               color="#47A138"
               style={{ marginLeft: 24 }}
-              size={32}
+              size={24}
               onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
             />
           )
