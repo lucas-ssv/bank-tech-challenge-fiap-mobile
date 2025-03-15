@@ -19,6 +19,8 @@ import {
   FormControlLabelText,
 } from '@/components/ui'
 
+import { View, TouchableOpacity } from "react-native";
+
 import { Input, InputField } from '@/components/ui'
 import { VStack } from '@/components/ui'
 import IluNovaConta from '@/assets/cadastro.svg'
@@ -29,6 +31,7 @@ const ModalCriarConta = () => {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [isChecked, setIsChecked] = useState(false);
 
   const handleSignUp = async () => {
     try {
@@ -45,7 +48,7 @@ const ModalCriarConta = () => {
         size="lg"
         variant="solid"
         action="primary"
-        className="bg-black"
+        className="bg-black h-16 rounded-lg"
         onPress={() => setShowModal(true)}
       >
         <ButtonText>Abrir conta</ButtonText>
@@ -76,11 +79,9 @@ const ModalCriarConta = () => {
           </ModalHeader>
 
           <ModalBody>
-            <Box className="w-[50px] max-w-[50px]">
-              <IluNovaConta />
-            </Box>
+            <IluNovaConta  width='100%'/>
 
-            <Heading className="text-left text-lg">
+            <Heading className="text-left text-lg mt-5">
               Preencha os campos abaixo para criar sua conta corrente!
             </Heading>
 
@@ -98,7 +99,7 @@ const ModalCriarConta = () => {
                     placeholder="Digite seu Nome"
                   />
                 </Input>
-                <FormControlLabel className="mt-8">
+                <FormControlLabel className="mt-3">
                   <FormControlLabelText className="font-bold">
                     Email
                   </FormControlLabelText>
@@ -110,7 +111,7 @@ const ModalCriarConta = () => {
                     placeholder="Digite seu email"
                   />
                 </Input>
-                <FormControlLabel className="mt-8">
+                <FormControlLabel className="mt-3">
                   <FormControlLabelText className="font-bold">
                     Senha
                   </FormControlLabelText>
@@ -124,9 +125,35 @@ const ModalCriarConta = () => {
                     value={password}
                   />
                 </Input>
+
+                <TouchableOpacity
+                  onPress={() => setIsChecked(!isChecked)}
+                  className='mt-5'
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                  }}
+                >
+                  <View
+                    className='border-custom-my-green'
+                    style={{
+                      width: 24,
+                      height: 24,
+                      borderRadius: 5,
+                      borderWidth: 2,
+                      alignItems: "center",
+                      justifyContent: "center",
+                      marginRight: 8,
+                      backgroundColor: isChecked ? "#4CAF50" : "transparent",
+                    }}
+                  >
+                    {isChecked && <Text style={{ color: "#fff" }}>✓</Text>}
+                  </View>
+                  <Text>Li e estou ciente quanto às condições de tratamento dos meus dados conforme descrito na Política de Privacidade do banco.</Text>
+                </TouchableOpacity>
               </FormControl>
               <Button
-                className="w-fit self-center mt-4"
+                className="w-fit self-center mt-4 bg-custom-my-orange"
                 size="sm"
                 onPress={handleSignUp}
               >

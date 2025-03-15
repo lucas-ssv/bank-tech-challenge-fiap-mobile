@@ -4,11 +4,17 @@ import { Menu, Icon, MenuItem, MenuItemLabel } from '@/components/ui'
 import Feather from '@expo/vector-icons/Feather'
 import Avatar from '@/assets/avatar.svg'
 import { useNavigation } from '@react-navigation/native'
+import { logout } from "@/firebase/auth";
 
 type Props = Omit<ComponentProps<typeof Menu>, 'trigger'>
 
 export function AvatarMenu({ ...rest }: Props) {
   const navigation = useNavigation()
+
+  const handleLogout = async () => {
+    await logout();
+    navigation.navigate('StackRoutes', { screen: 'Home' });
+  };
 
   return (
     <Menu
@@ -51,6 +57,7 @@ export function AvatarMenu({ ...rest }: Props) {
         key="Sair"
         className="active:!bg-custom-my-placeholder"
         textValue="Sair"
+        onPress={handleLogout}
       >
         <Feather name="log-out" color="#47A138" size={16} className="mr-2" />
         <MenuItemLabel className="text-white" size="sm">

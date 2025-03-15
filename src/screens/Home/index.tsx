@@ -20,14 +20,14 @@ export function Home() {
         <LinearGradient className="flex-1" colors={['#004D61', '#FFFFFF']}>
           <Header />
           <Box className="px-4 py-20">
-            <Text size="4xl" className="text-black font-heading text-center">
+            <Text size="4xl" className="text-black font-heading text-center -mb-8">
               Experimente mais liberdade no controle da sua vida financeira.
               Crie sua conta com a gente!
             </Text>
 
-            <IlustracaoBanner />
+            <IlustracaoBanner width='auto'/>
 
-            <HStack className="w-full flex justify-center gap-8">
+            <HStack className="w-full -mt-10 flex justify-center gap-8">
               <ModalCriarConta />
 
               <ModalLogin />
@@ -36,7 +36,7 @@ export function Home() {
             <Box>
               <Text
                 size="3xl"
-                className="mt-12 text-black font-heading text-center"
+                className="mt-14 text-black font-heading text-center"
               >
                 Vantagens do nosso banco:
               </Text>
@@ -50,8 +50,8 @@ export function Home() {
                   Conta e cartão gratuitos
                 </Text>
                 <Text
-                  size="xl"
-                  className="mt-6 text-custom-my-gray font-heading text-center"
+                  size="lg"
+                  className="mt-6 text-custom-my-gray text-center"
                 >
                   Isso mesmo, nossa conta é digital, sem custo fixo e mais que
                   isso: sem tarifa de manutenção.
@@ -67,7 +67,7 @@ export function Home() {
                   Saques sem custo
                 </Text>
                 <Text
-                  size="xl"
+                  size="lg"
                   className="mt-6 text-custom-my-gray text-center"
                 >
                   Você pode sacar gratuitamente 4x por mês de qualquer Banco
@@ -83,7 +83,7 @@ export function Home() {
                   Programa de pontos
                 </Text>
                 <Text
-                  size="xl"
+                  size="lg"
                   className="mt-6 text-custom-my-gray text-center"
                 >
                   Você pode acumular pontos com suas compras no crédito sem
@@ -91,7 +91,7 @@ export function Home() {
                 </Text>
               </Box>
               <Box className="flex justify-center items-center mt-20">
-                <Dispositivos />
+                <Dispositivos/>
                 <Text
                   size="2xl"
                   className="mt-10 text-custom-my-green font-heading text-center"
@@ -99,7 +99,7 @@ export function Home() {
                   Seguro Dispositivos
                 </Text>
                 <Text
-                  size="xl"
+                  size="lg"
                   className="mt-6 text-custom-my-gray text-center"
                 >
                   Seus dispositivos móveis (computador e laptop) protegidos por
