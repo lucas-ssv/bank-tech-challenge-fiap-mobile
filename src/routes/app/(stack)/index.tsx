@@ -1,4 +1,4 @@
-import { Dashboard, MeusCartoes, Profile, Servicos } from '@/screens'
+import { Dashboard, Investimentos, MeusCartoes, Profile, Servicos } from '@/screens'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import Feather from '@expo/vector-icons/Feather'
 import { DrawerActions } from '@react-navigation/native'
@@ -41,6 +41,13 @@ export function StackRoutes({ navigation }: Props) {
               />
             )
           },
+        }}
+      />
+      <Screen
+        name="Investimentos"
+        component={Investimentos}
+        options={{
+          title: 'Investimentos',
         }}
       />
       <Screen
