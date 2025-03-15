@@ -3,6 +3,7 @@ import { Box, Button, Heading, HStack, VStack } from '@/components/ui'
 import { ScrollView } from 'react-native'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import Pixels from '@/assets/pixels-servicos.svg'
+import { CardTransaction } from './components'
 
 export function Transacoes() {
   return (
@@ -34,6 +35,10 @@ export function Transacoes() {
               <MaterialIcons name="tune" color="#FFFFFF" size={24} />
             </Button>
           </HStack>
+
+          <VStack className="gap-4 mt-8">
+            <CardTransaction />
+          </VStack>
         </Box>
         <Extract />
       </VStack>
