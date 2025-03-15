@@ -1,11 +1,8 @@
-import { Box, HStack, Text, VStack } from '@/components/ui'
-import { ScrollView } from 'react-native'
+import { Box, Heading, HStack, Text, VStack } from '@/components/ui'
+import { ScrollView, View  } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 
-import { Header } from './components/Header/Header'
-import Footer from './components/Footer/Footer'
-import ModalCriarConta from './components/ModalCriarConta/ModalCriarConta'
-import ModalLogin from './components/ModalLogin/ModalLogin'
+import { Footer, ModalCriarConta, ModalLogin } from './components'
 
 import IlustracaoBanner from '@/assets/ilustracao-banner.svg'
 import Gift from '@/assets/presente.svg'
@@ -15,93 +12,69 @@ import Dispositivos from '@/assets/dispositivos.svg'
 
 export function Home() {
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
-      <VStack className="bg-custom-my-light-green">
+    <ScrollView
+      className="bg-custom-my-light-green"
+      showsVerticalScrollIndicator={false}
+    >
+      <VStack className="flex-1">
         <LinearGradient className="flex-1" colors={['#004D61', '#FFFFFF']}>
-          <Header />
-          <Box className="px-4 py-20">
-            <Text size="4xl" className="text-black font-heading text-center -mb-8">
+          <Box className="px-6 py-10">
+            <Heading className="text-black text-center text-xl">
               Experimente mais liberdade no controle da sua vida financeira.
               Crie sua conta com a gente!
-            </Text>
-
-            <IlustracaoBanner width='auto'/>
-
-            <HStack className="w-full -mt-10 flex justify-center gap-8">
+            </Heading>
+            <View className="mt-4">
+              <IlustracaoBanner width="100%" height={194} />
+            </View>
+            <HStack className="justify-between items-center gap-6 mt-4">
               <ModalCriarConta />
-
               <ModalLogin />
             </HStack>
 
-            <Box>
-              <Text
-                size="3xl"
-                className="mt-14 text-black font-heading text-center"
-              >
+            <Box className="px-10">
+              <Heading className="text-lg text-center text-black mt-8">
                 Vantagens do nosso banco:
-              </Text>
+              </Heading>
 
-              <Box className="flex justify-center items-center mt-20 gap-">
+              <Box className="flex justify-center items-center mt-10">
                 <Gift />
-                <Text
-                  size="2xl"
-                  className="mt-10 text-custom-my-green font-heading text-center"
-                >
+                <Heading className="text-custom-my-green text-lg text-center mt-10">
                   Conta e cartão gratuitos
-                </Text>
-                <Text
-                  size="lg"
-                  className="mt-6 text-custom-my-gray text-center"
-                >
+                </Heading>
+                <Text className="text-custom-my-gray font-body text-md text-center mt-6">
                   Isso mesmo, nossa conta é digital, sem custo fixo e mais que
                   isso: sem tarifa de manutenção.
                 </Text>
               </Box>
 
-              <Box className="flex justify-center items-center mt-20">
+              <Box className="flex justify-center items-center mt-10">
                 <Saque />
-                <Text
-                  size="2xl"
-                  className="mt-10 text-custom-my-green font-heading text-center"
-                >
+                <Heading className="text-custom-my-green text-lg text-center mt-10">
                   Saques sem custo
-                </Text>
-                <Text
-                  size="lg"
-                  className="mt-6 text-custom-my-gray text-center"
-                >
+                </Heading>
+                <Text className="text-custom-my-gray font-body text-md text-center mt-6">
                   Você pode sacar gratuitamente 4x por mês de qualquer Banco
                   24h.
                 </Text>
               </Box>
-              <Box className="flex justify-center items-center mt-20">
+
+              <Box className="flex justify-center items-center mt-10">
                 <Star />
-                <Text
-                  size="2xl"
-                  className="mt-10 text-custom-my-green font-heading text-center"
-                >
+                <Heading className="text-custom-my-green text-lg text-center mt-10">
                   Programa de pontos
-                </Text>
-                <Text
-                  size="lg"
-                  className="mt-6 text-custom-my-gray text-center"
-                >
+                </Heading>
+                <Text className="text-custom-my-gray font-body text-md text-center mt-6">
                   Você pode acumular pontos com suas compras no crédito sem
                   pagar mensalidade!
                 </Text>
               </Box>
-              <Box className="flex justify-center items-center mt-20">
-                <Dispositivos/>
-                <Text
-                  size="2xl"
-                  className="mt-10 text-custom-my-green font-heading text-center"
-                >
+
+              <Box className="flex justify-center items-center mt-10">
+                <Dispositivos />
+                <Heading className="text-custom-my-green text-lg text-center mt-10">
                   Seguro Dispositivos
-                </Text>
-                <Text
-                  size="lg"
-                  className="mt-6 text-custom-my-gray text-center"
-                >
+                </Heading>
+                <Text className="text-custom-my-gray font-body text-md text-center mt-6">
                   Seus dispositivos móveis (computador e laptop) protegidos por
                   uma mensalidade simbólica.
                 </Text>

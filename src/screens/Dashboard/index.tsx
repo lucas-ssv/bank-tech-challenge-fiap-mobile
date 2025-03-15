@@ -9,7 +9,7 @@ export function Dashboard() {
       className="bg-custom-my-light-green"
       showsVerticalScrollIndicator={false}
     >
-      <VStack className="flex-1  p-6">
+      <VStack className="flex-1 p-6">
         <Welcome />
         <NewTransaction />
         <FinancialFlowChart />

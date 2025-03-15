@@ -48,7 +48,7 @@ const ModalCriarConta = () => {
         size="lg"
         variant="solid"
         action="primary"
-        className="bg-black h-16 rounded-lg"
+        className="bg-black rounded-lg"
         onPress={() => setShowModal(true)}
       >
         <ButtonText>Abrir conta</ButtonText>

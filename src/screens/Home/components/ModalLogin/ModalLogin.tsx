@@ -31,8 +31,6 @@ import { VStack } from '@/components/ui/vstack'
 import BannerLogin from '@/assets/login.svg'
 import { login } from '@/firebase/auth'
 
-import { Alert } from "react-native";
-
 const ModalLogin = () => {
   const [showModal, setShowModal] = useState(false)
   const [email, setEmail] = useState('')
@@ -44,7 +42,6 @@ const ModalLogin = () => {
       console.log(user)
     } catch (error) {
       console.error(error)
-      Alert.alert("Erro", "E-mail ou senha inválido. Tente novamente.");
     }
   }
 
@@ -54,7 +51,7 @@ const ModalLogin = () => {
         size="lg"
         variant="outline"
         action="primary"
-        className="text-black border-black h-16 rounded-lg"
+        className="text-black border-black rounded-lg"
         onPress={() => setShowModal(true)}
       >
         <ButtonText className='text-black'>Ja tenho conta</ButtonText>
