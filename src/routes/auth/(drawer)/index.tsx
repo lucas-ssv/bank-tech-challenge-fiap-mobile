@@ -17,18 +17,19 @@ export function AuthDrawerRoutes() {
         headerTitle: '',
         headerStyle: {
           backgroundColor: '#000000',
+          height: 130
         },
         headerTintColor: '#47A138',
         headerRight(props) {
-          return <Logo style={{ marginRight: 16 }} />
+          return <Logo style={{ marginRight: 24 }} />
         },
         headerLeft() {
           return (
             <Feather
               name="menu"
               color="#47A138"
-              style={{ marginLeft: 16 }}
-              size={20}
+              style={{ marginLeft: 24 }}
+              size={32}
               onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
             />
           )

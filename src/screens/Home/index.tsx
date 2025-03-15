@@ -1,5 +1,5 @@
 import { Box, Heading, HStack, Text, VStack } from '@/components/ui'
-import { ScrollView, View } from 'react-native'
+import { ScrollView, View  } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 
 import { Footer, ModalCriarConta, ModalLogin } from './components'
@@ -32,7 +32,7 @@ export function Home() {
             </HStack>
 
             <Box className="px-10">
-              <Heading className="text-lg text-center mt-8">
+              <Heading className="text-lg text-center text-black mt-8">
                 Vantagens do nosso banco:
               </Heading>
 

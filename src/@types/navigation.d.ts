@@ -1,4 +1,5 @@
 export type StackParamList = {
+  Home: undefined
   MeusCartoes: undefined
   Servicos: undefined
   Profile: undefined
