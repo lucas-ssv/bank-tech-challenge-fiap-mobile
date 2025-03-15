@@ -21,6 +21,7 @@ import {
   Pressable,
   FormControlError,
   FormControlErrorText,
+  ButtonSpinner,
 } from '@/components/ui'
 import { z } from 'zod'
 import { Controller, useForm } from 'react-hook-form'
@@ -31,6 +32,7 @@ import CloseIcon from '@/assets/close-black.svg'
 import { signUp } from '@/firebase/auth'
 import { View } from 'react-native'
 import Checkbox from 'expo-checkbox'
+import { useToast } from '@/hooks'
 
 type SignUpData = z.infer<typeof schema>
 
@@ -53,19 +55,25 @@ export function ModalCriarConta() {
     handleSubmit,
     setValue,
     getValues,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(schema),
   })
+  const toast = useToast()
   const [showModal, setShowModal] = useState(false)
 
   const onSignUp = async (data: SignUpData) => {
     const { name, email, password } = data
     try {
-      const credentials = await signUp(name, email, password)
-      console.log(credentials)
+      await signUp(name, email, password)
     } catch (error) {
-      console.error(error)
+      switch (error.code) {
+        case 'auth/email-already-exists':
+          toast('error', 'Este e-mail já existe.', error.code)
+          break
+        default:
+          toast('error', 'Ocorreu um erro ao efetuar o cadastro.', error.code)
+      }
     }
   }
 
@@ -84,7 +92,7 @@ export function ModalCriarConta() {
           setShowModal(false)
         }}
         size="lg"
-        className="h-full py-20"
+        className="ios:h-full ios:py-20"
       >
         <ModalBackdrop />
 
@@ -233,7 +241,9 @@ export function ModalCriarConta() {
               <Button
                 className="h-12 bg-custom-my-orange rounded-lg mt-8"
                 onPress={handleSubmit(onSignUp)}
+                isDisabled={isSubmitting}
               >
+                {isSubmitting && <ButtonSpinner className="text-white" />}
                 <ButtonText className="text-md">Criar conta</ButtonText>
               </Button>
             </VStack>

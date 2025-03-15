@@ -19,6 +19,7 @@ import {
   VStack,
   FormControlError,
   FormControlErrorText,
+  ButtonSpinner,
 } from '@/components/ui'
 
 import BannerLogin from '@/assets/login.svg'
@@ -28,6 +29,7 @@ import { View } from 'react-native'
 import { z } from 'zod'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useToast } from '@/hooks'
 
 type LoginData = z.infer<typeof schema>
 
@@ -44,19 +46,25 @@ export function ModalLogin() {
   const {
     control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(schema),
   })
+  const toast = useToast()
   const [showModal, setShowModal] = useState(false)
 
   const onLogin = async (data: LoginData) => {
     const { email, password } = data
     try {
-      const user = await login(email, password)
-      console.log(user)
+      await login(email, password)
     } catch (error) {
-      console.error(error)
+      switch (error.code) {
+        case 'auth/invalid-credential':
+          toast('error', 'E-mail ou senha inválidas.', error.code)
+          break
+        default:
+          toast('error', 'Ocorreu um erro ao efetuar o login.', error.code)
+      }
     }
   }
 
@@ -76,7 +84,7 @@ export function ModalLogin() {
           setShowModal(false)
         }}
         size="lg"
-        className="h-full py-20"
+        className="ios:h-full ios:py-20"
       >
         <ModalBackdrop />
 
@@ -175,7 +183,9 @@ export function ModalLogin() {
               <Button
                 className="h-12 bg-custom-my-orange rounded-lg mt-8"
                 onPress={handleSubmit(onLogin)}
+                isDisabled={isSubmitting}
               >
+                {isSubmitting && <ButtonSpinner className="text-white" />}
                 <ButtonText className="text-md">Entrar</ButtonText>
               </Button>
             </VStack>
