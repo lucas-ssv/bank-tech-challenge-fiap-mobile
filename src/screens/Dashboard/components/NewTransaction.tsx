@@ -1,9 +1,10 @@
-import { ComponentProps } from 'react'
+import { ComponentProps, useState } from 'react'
 import {
   Box,
   Button,
   ButtonIcon,
   ButtonText,
+  Divider,
   FormControl,
   FormControlLabel,
   FormControlLabelText,
@@ -12,7 +13,6 @@ import {
   Icon,
   Image,
   Input,
-  InputField,
   Select,
   SelectBackdrop,
   SelectContent,
@@ -32,10 +32,13 @@ import ArrowDropdown from '@/assets/arrow-dropdown.svg'
 import File from '@/assets/file.svg'
 import CloseBlack from '@/assets/close-black.svg'
 import { TouchableOpacity } from 'react-native'
+import { TextInputMask } from 'react-native-masked-text'
 
 type Props = ComponentProps<typeof Box>
 
 export function NewTransaction({ className, ...rest }: Props) {
+  const [value, setValue] = useState('')
+
   return (
     <Box
       className={`min-h-[655px] bg-custom-my-gray-box py-8 px-4 rounded-lg overflow-hidden mt-6 ${className}`}
@@ -76,14 +79,19 @@ export function NewTransaction({ className, ...rest }: Props) {
               <SelectDragIndicatorWrapper>
                 <SelectDragIndicator />
               </SelectDragIndicatorWrapper>
-              <SelectItem label="UX Research" value="ux" />
-              <SelectItem label="Web Development" value="web" />
+              <Heading className="text-md my-4">
+                Escolha o tipo de transação
+              </Heading>
+              <Divider />
+              <SelectItem label="Câmbio de moeda" value="cambio" />
+              <SelectItem label="DOC/TED" value="doc/ted" />
               <SelectItem
-                label="Cross Platform Development Process"
-                value="Cross Platform Development Process"
+                label="Empréstimo e Financiamento"
+                value="emprestimo"
               />
-              <SelectItem label="UI Designing" value="ui" isDisabled={true} />
-              <SelectItem label="Backend Development" value="backend" />
+              <SelectItem label="Depósito" value="deposito" />
+              <SelectItem label="Débito" value="debito" />
+              <SelectItem label="Crédito" value="credito" />
             </SelectContent>
           </SelectPortal>
         </Select>
@@ -95,10 +103,20 @@ export function NewTransaction({ className, ...rest }: Props) {
             </FormControlLabelText>
           </FormControlLabel>
           <Input className="h-12 bg-white border border-custom-my-dark-green rounded-lg mt-2">
-            <InputField
-              className="text-md text-center"
-              inputMode="numeric"
-              placeholder="00.00"
+            <TextInputMask
+              type="money"
+              value={value}
+              onChangeText={(text, rawText) => {
+                console.log(rawText)
+                setValue(text)
+              }}
+              style={{
+                flex: 1,
+                height: '100%',
+                textAlign: 'center',
+                fontSize: 16,
+              }}
+              includeRawValueInChangeText
             />
           </Input>
 
