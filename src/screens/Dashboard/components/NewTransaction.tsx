@@ -1,4 +1,4 @@
-import { ComponentProps, useState } from 'react'
+import { ComponentProps, useCallback, useEffect, useState } from 'react'
 import * as DocumentPicker from 'expo-document-picker'
 import * as FileSystem from 'expo-file-system'
 import {
@@ -34,17 +34,29 @@ import CloseBlack from '@/assets/close-black.svg'
 import { TextInputMask } from 'react-native-masked-text'
 import { ModalImage } from '@/components'
 import { Alert } from 'react-native'
-import { addDoc, collection, Timestamp } from 'firebase/firestore'
+import {
+  addDoc,
+  collection,
+  getDocs,
+  query,
+  Timestamp,
+  where,
+} from 'firebase/firestore'
 import { db } from '@/firebase/config'
 import { transactionDocumentConverter } from '@/firebase/converters'
 import { useAuth } from '@/contexts'
 import { useToast } from '@/hooks'
+import { TransactionDocument } from '@/models'
+import Feather from '@expo/vector-icons/Feather'
 
 type Props = ComponentProps<typeof Box>
 
 export function NewTransaction({ className, ...rest }: Props) {
   const { user } = useAuth()
   const toast = useToast()
+  const [transactionDocuments, setTransactionDocuments] = useState<
+    TransactionDocument[]
+  >([])
   const [value, setValue] = useState('R$0,00')
 
   const handlePickerDocument = async () => {
@@ -90,6 +102,32 @@ export function NewTransaction({ className, ...rest }: Props) {
       toast('error', 'Ocorreu um erro ao inserir o(s) documento(s)', error.code)
     }
   }
+
+  const fetchTransactionDocuments = useCallback(async () => {
+    try {
+      const q = query(
+        collection(db, 'transaction-documents').withConverter(
+          transactionDocumentConverter,
+        ),
+        where('userUid', '==', user!.uid),
+      )
+      const querySnapshot = await getDocs(q)
+      const transactionDocuments: TransactionDocument[] = []
+
+      querySnapshot.forEach((doc) => {
+        const transactionDocument = doc.data()
+        transactionDocuments.push(transactionDocument)
+      })
+
+      setTransactionDocuments(transactionDocuments)
+    } catch (error) {
+      console.error(error)
+    }
+  }, [user])
+
+  useEffect(() => {
+    fetchTransactionDocuments()
+  }, [fetchTransactionDocuments])
 
   return (
     <Box
@@ -196,19 +234,28 @@ export function NewTransaction({ className, ...rest }: Props) {
             </Box>
           </Button>
 
-          <Box className="bg-custom-my-light-gray rounded-lg p-2 pr-6 mt-2">
-            <HStack className="items-center justify-between">
-              <HStack className="items-center gap-4">
-                <ModalImage />
-                <Text className="text-sm text-custom-my-gray font-body">
-                  Nome da Imagem
-                </Text>
+          {transactionDocuments.map((document) => (
+            <Box
+              key={document.id}
+              className="bg-custom-my-light-gray rounded-lg p-2 pr-6 mt-2"
+            >
+              <HStack className="items-center justify-between">
+                <HStack className="items-center gap-4">
+                  {document.mimeType.includes('image') ? (
+                    <ModalImage uri={document.uri} />
+                  ) : (
+                    <Feather name="file-text" size={24} />
+                  )}
+                  <Text className="text-sm text-custom-my-gray font-body">
+                    {document.name}
+                  </Text>
+                </HStack>
+                <Button variant="link">
+                  <CloseBlack />
+                </Button>
               </HStack>
-              <Button variant="link">
-                <CloseBlack />
-              </Button>
-            </HStack>
-          </Box>
+            </Box>
+          ))}
 
           <Button className="h-12 bg-custom-my-dark-green rounded-lg mt-8">
             <ButtonText className="text-white text-md font-semibold">
