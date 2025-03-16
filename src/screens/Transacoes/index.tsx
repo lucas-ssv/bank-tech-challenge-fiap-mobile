@@ -1,9 +1,8 @@
 import { Extract, Welcome } from '@/components'
-import { Box, Button, Heading, HStack, VStack } from '@/components/ui'
+import { Box, Heading, HStack, VStack } from '@/components/ui'
 import { ScrollView } from 'react-native'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import Pixels from '@/assets/pixels-servicos.svg'
-import { CardTransaction } from './components'
+import { CardTransaction, ModalFilters } from './components'
 
 export function Transacoes() {
   return (
@@ -31,9 +30,7 @@ export function Transacoes() {
             <Heading className="text-black text-xl font-heading">
               Transações
             </Heading>
-            <Button className="h-12 w-12 bg-custom-my-dark-green rounded-full p-0">
-              <MaterialIcons name="tune" color="#FFFFFF" size={24} />
-            </Button>
+            <ModalFilters />
           </HStack>
 
           <VStack className="gap-4 mt-8">

@@ -26,9 +26,16 @@ import { useState } from 'react'
 type Props = PressableProps & {
   date: Date
   setDate: React.Dispatch<React.SetStateAction<Date>>
+  textColor?: string
 }
 
-export function InputDate({ date, setDate, className, ...rest }: Props) {
+export function InputDate({
+  date,
+  setDate,
+  className,
+  textColor,
+  ...rest
+}: Props) {
   const [open, setOpen] = useState(false)
 
   const handleSelectedDate = (event: DateTimePickerEvent, date?: Date) => {
@@ -57,7 +64,7 @@ export function InputDate({ date, setDate, className, ...rest }: Props) {
       >
         <HStack className="items-center justify-between gap-4">
           <Text
-            className="flex-1 text-white text-sm font-medium"
+            className={`flex-1 ${textColor ? textColor : 'text-white'} text-sm font-medium`}
             numberOfLines={1}
           >
             {date.toISOString()}
