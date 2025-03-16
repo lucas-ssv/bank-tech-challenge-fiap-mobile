@@ -1,4 +1,6 @@
 import { ComponentProps, useState } from 'react'
+import * as DocumentPicker from 'expo-document-picker'
+import * as FileSystem from 'expo-file-system'
 import {
   Box,
   Button,
@@ -10,8 +12,6 @@ import {
   FormControlLabelText,
   Heading,
   HStack,
-  Icon,
-  Image,
   Input,
   Select,
   SelectBackdrop,
@@ -31,13 +31,65 @@ import Illustration from '@/assets/ilustracao2.svg'
 import ArrowDropdown from '@/assets/arrow-dropdown.svg'
 import File from '@/assets/file.svg'
 import CloseBlack from '@/assets/close-black.svg'
-import { TouchableOpacity } from 'react-native'
 import { TextInputMask } from 'react-native-masked-text'
+import { ModalImage } from '@/components'
+import { Alert } from 'react-native'
+import { addDoc, collection, Timestamp } from 'firebase/firestore'
+import { db } from '@/firebase/config'
+import { transactionDocumentConverter } from '@/firebase/converters'
+import { useAuth } from '@/contexts'
+import { useToast } from '@/hooks'
 
 type Props = ComponentProps<typeof Box>
 
 export function NewTransaction({ className, ...rest }: Props) {
-  const [value, setValue] = useState('')
+  const { user } = useAuth()
+  const toast = useToast()
+  const [value, setValue] = useState('R$0,00')
+
+  const handlePickerDocument = async () => {
+    try {
+      const result = await DocumentPicker.getDocumentAsync({
+        multiple: true,
+      })
+
+      if (result.canceled) return
+
+      const assets = result.assets
+      if (assets && assets.length > 0) {
+        for (const asset of assets) {
+          const assetInfo = await FileSystem.getInfoAsync(asset.uri)
+          if (assetInfo.exists) {
+            const assetSizeInMb = assetInfo.size / (1024 * 1024)
+            const limitSize = 10
+
+            if (assetSizeInMb > limitSize) {
+              return Alert.alert(
+                'Tamanho excedido',
+                `O tamanho máximo de arquivo é de até ${limitSize}MB`,
+              )
+            }
+
+            await addDoc(
+              collection(db, 'transaction-documents').withConverter(
+                transactionDocumentConverter,
+              ),
+              {
+                userUid: user?.uid!,
+                name: asset.name,
+                uri: assetInfo.uri,
+                mimeType: asset.mimeType!,
+                createdAt: Timestamp.now(),
+                updatedAt: Timestamp.now(),
+              },
+            )
+          }
+        }
+      }
+    } catch (error) {
+      toast('error', 'Ocorreu um erro ao inserir o(s) documento(s)', error.code)
+    }
+  }
 
   return (
     <Box
@@ -125,7 +177,10 @@ export function NewTransaction({ className, ...rest }: Props) {
               Documentos relacionados
             </FormControlLabelText>
           </FormControlLabel>
-          <Button className="h-auto flex-col bg-white active:!bg-custom-my-services-card-bg rounded-lg border border-dashed border-custom-my-dark-green p-6 mt-2">
+          <Button
+            className="h-auto flex-col bg-white active:!bg-custom-my-services-card-bg rounded-lg border border-dashed border-custom-my-dark-green p-6 mt-2"
+            onPress={handlePickerDocument}
+          >
             <ButtonIcon
               as={File}
               className="h-8 w-8 fill-custom-my-dark-green"
@@ -144,21 +199,14 @@ export function NewTransaction({ className, ...rest }: Props) {
           <Box className="bg-custom-my-light-gray rounded-lg p-2 pr-6 mt-2">
             <HStack className="items-center justify-between">
               <HStack className="items-center gap-4">
-                <Image
-                  size="xs"
-                  source={{
-                    uri: 'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
-                  }}
-                  className="rounded-md object-cover"
-                  alt="image"
-                />
+                <ModalImage />
                 <Text className="text-sm text-custom-my-gray font-body">
                   Nome da Imagem
                 </Text>
               </HStack>
-              <TouchableOpacity>
-                <Icon as={CloseBlack} size="sm" />
-              </TouchableOpacity>
+              <Button variant="link">
+                <CloseBlack />
+              </Button>
             </HStack>
           </Box>
 
