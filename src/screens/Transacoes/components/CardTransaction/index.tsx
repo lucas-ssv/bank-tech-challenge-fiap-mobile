@@ -1,6 +1,6 @@
-import { Button, Card, HStack, Text, VStack } from '@/components/ui'
 import { View } from 'react-native'
-import Pencil from '@/assets/lapis.svg'
+import { Button, Card, HStack, Text, VStack } from '@/components/ui'
+import { ModalUpdateTransaction } from './components'
 import Trash from '@/assets/lixeira.svg'
 
 export function CardTransaction() {
@@ -35,9 +35,7 @@ export function CardTransaction() {
         </VStack>
 
         <HStack className="justify-end gap-2">
-          <Button className="h-12 w-12 bg-custom-my-dark-green rounded-full p-0">
-            <Pencil />
-          </Button>
+          <ModalUpdateTransaction />
           <Button className="h-12 w-12 bg-custom-my-dark-green rounded-full p-0">
             <Trash />
           </Button>

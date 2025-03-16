@@ -1,13 +1,12 @@
 import { useState } from 'react'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import {
+  Box,
   Button,
   ButtonText,
   FormControl,
   FormControlLabel,
   FormControlLabelText,
   Heading,
-  HStack,
   Input,
   InputField,
   Modal,
@@ -27,12 +26,15 @@ import {
   SelectItem,
   SelectPortal,
   SelectTrigger,
+  Text,
+  VStack,
 } from '@/components/ui'
+import { InputDate, ModalImage } from '@/components'
+import Pencil from '@/assets/lapis.svg'
 import Close from '@/assets/close-black.svg'
 import ArrowDropdown from '@/assets/arrow-dropdown.svg'
-import { InputDate } from '@/components'
 
-export function ModalFilters() {
+export function ModalUpdateTransaction() {
   const [isOpen, setIsOpen] = useState(false)
   const [date, setDate] = useState(new Date())
 
@@ -42,13 +44,13 @@ export function ModalFilters() {
         className="h-12 w-12 bg-custom-my-dark-green rounded-full p-0"
         onPress={() => setIsOpen(true)}
       >
-        <MaterialIcons name="tune" color="#FFFFFF" size={24} />
+        <Pencil />
       </Button>
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} size="lg">
         <ModalBackdrop />
         <ModalContent>
           <ModalHeader>
-            <Heading className="text-lg">Filtrar por transações</Heading>
+            <Heading className="text-lg">Editar transação</Heading>
             <ModalCloseButton>
               <Close />
             </ModalCloseButton>
@@ -107,52 +109,37 @@ export function ModalFilters() {
               />
             </FormControl>
 
-            <HStack className="gap-4 mt-4">
-              <FormControl className="flex-1">
-                <FormControlLabel>
-                  <FormControlLabelText className="text-md text-black">
-                    Valor mínimo
-                  </FormControlLabelText>
-                </FormControlLabel>
-                <Input className="h-12 bg-white border border-custom-my-dark-green rounded-lg">
-                  <InputField
-                    keyboardType="numeric"
-                    className="text-black"
-                    placeholder="R$ 00,00"
-                  />
-                </Input>
-              </FormControl>
-              <FormControl className="flex-1">
-                <FormControlLabel>
-                  <FormControlLabelText className="text-md text-black">
-                    Valor máximo
-                  </FormControlLabelText>
-                </FormControlLabel>
-                <Input className="h-12 bg-white border border-custom-my-dark-green rounded-lg">
-                  <InputField
-                    keyboardType="numeric"
-                    className="text-black"
-                    placeholder="R$ 00,00"
-                  />
-                </Input>
-              </FormControl>
-            </HStack>
+            <FormControl className="mt-4">
+              <FormControlLabel>
+                <FormControlLabelText className="text-md text-black">
+                  Valor
+                </FormControlLabelText>
+              </FormControlLabel>
+              <Input className="h-12 bg-white border border-custom-my-dark-green rounded-lg">
+                <InputField
+                  keyboardType="numeric"
+                  className="text-black"
+                  placeholder="R$ 00,00"
+                />
+              </Input>
+            </FormControl>
+
+            <VStack className="gap-1 mt-4">
+              <Text className="text-md text-black">
+                Documentos relacionados
+              </Text>
+              <Box className="border border-dashed border-custom-my-dark-green rounded-lg p-2">
+                <ModalImage />
+              </Box>
+            </VStack>
           </ModalBody>
           <ModalFooter>
-            <HStack className="gap-4">
-              <Button
-                className="flex-1 h-12 bg-custom-my-extract-date-color rounded-lg"
-                variant="solid"
-              >
-                <ButtonText className="text-md">Limpar</ButtonText>
-              </Button>
-              <Button
-                className="flex-1 h-12 bg-custom-my-dark-green rounded-lg"
-                variant="solid"
-              >
-                <ButtonText className="text-md">Filtrar</ButtonText>
-              </Button>
-            </HStack>
+            <Button
+              className="flex-1 h-12 bg-custom-my-dark-green rounded-lg"
+              variant="solid"
+            >
+              <ButtonText className="text-md">Editar transação</ButtonText>
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
