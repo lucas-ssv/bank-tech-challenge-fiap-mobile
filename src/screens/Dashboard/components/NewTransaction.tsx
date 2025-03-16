@@ -1,4 +1,4 @@
-import { ComponentProps, useCallback, useEffect, useState } from 'react'
+import { ComponentProps, useState } from 'react'
 import * as DocumentPicker from 'expo-document-picker'
 import * as FileSystem from 'expo-file-system'
 import {
@@ -8,6 +8,8 @@ import {
   ButtonText,
   Divider,
   FormControl,
+  FormControlError,
+  FormControlErrorText,
   FormControlLabel,
   FormControlLabelText,
   Heading,
@@ -34,30 +36,48 @@ import CloseBlack from '@/assets/close-black.svg'
 import { TextInputMask } from 'react-native-masked-text'
 import { ModalImage } from '@/components'
 import { Alert } from 'react-native'
-import {
-  addDoc,
-  collection,
-  getDocs,
-  query,
-  Timestamp,
-  where,
-} from 'firebase/firestore'
-import { db } from '@/firebase/config'
-import { transactionDocumentConverter } from '@/firebase/converters'
+import { Timestamp } from 'firebase/firestore'
 import { useAuth } from '@/contexts'
 import { useToast } from '@/hooks'
 import { TransactionDocument } from '@/models'
 import Feather from '@expo/vector-icons/Feather'
+import { z } from 'zod'
+import { Controller, useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 type Props = ComponentProps<typeof Box>
+
+type CreateTransactionData = z.infer<typeof schema>
+
+const schema = z.object({
+  transactionType: z.string({ message: 'O tipo da transação é obrigatório' }),
+  value: z
+    .string()
+    .min(1, 'O valor é obrigatório')
+    .refine((value) => {
+      const numericValue = Number(
+        value.replace(/[^0-9,]/g, '').replace(',', '.'),
+      )
+      return numericValue >= 1
+    }, 'O valor mínimo é R$1,00'),
+})
 
 export function NewTransaction({ className, ...rest }: Props) {
   const { user } = useAuth()
   const toast = useToast()
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      value: 'R$0,00',
+    },
+  })
   const [transactionDocuments, setTransactionDocuments] = useState<
     TransactionDocument[]
   >([])
-  const [value, setValue] = useState('R$0,00')
 
   const handlePickerDocument = async () => {
     try {
@@ -82,10 +102,8 @@ export function NewTransaction({ className, ...rest }: Props) {
               )
             }
 
-            await addDoc(
-              collection(db, 'transaction-documents').withConverter(
-                transactionDocumentConverter,
-              ),
+            setTransactionDocuments((prevState) => [
+              ...prevState,
               {
                 userUid: user?.uid!,
                 name: asset.name,
@@ -94,7 +112,7 @@ export function NewTransaction({ className, ...rest }: Props) {
                 createdAt: Timestamp.now(),
                 updatedAt: Timestamp.now(),
               },
-            )
+            ])
           }
         }
       }
@@ -103,31 +121,9 @@ export function NewTransaction({ className, ...rest }: Props) {
     }
   }
 
-  const fetchTransactionDocuments = useCallback(async () => {
-    try {
-      const q = query(
-        collection(db, 'transaction-documents').withConverter(
-          transactionDocumentConverter,
-        ),
-        where('userUid', '==', user!.uid),
-      )
-      const querySnapshot = await getDocs(q)
-      const transactionDocuments: TransactionDocument[] = []
-
-      querySnapshot.forEach((doc) => {
-        const transactionDocument = doc.data()
-        transactionDocuments.push(transactionDocument)
-      })
-
-      setTransactionDocuments(transactionDocuments)
-    } catch (error) {
-      console.error(error)
-    }
-  }, [user])
-
-  useEffect(() => {
-    fetchTransactionDocuments()
-  }, [fetchTransactionDocuments])
+  const onCreateTransaction = async (data: CreateTransactionData) => {
+    console.log(data)
+  }
 
   return (
     <Box
@@ -150,66 +146,94 @@ export function NewTransaction({ className, ...rest }: Props) {
       <Heading className="text-black text-center text-xl font-heading">
         Nova transação
       </Heading>
-      <FormControl className="mt-8">
-        <Select>
-          <SelectTrigger
-            variant="outline"
-            size="xl"
-            className="h-12 bg-white border border-custom-my-dark-green rounded-lg"
-          >
-            <SelectInput
-              className="flex-1 text-md placeholder:text-custom-my-placeholder"
-              placeholder="Selecione o tipo de transação"
-            />
-            <SelectIcon className="mr-3" size="sm" as={ArrowDropdown} />
-          </SelectTrigger>
-          <SelectPortal>
-            <SelectBackdrop />
-            <SelectContent>
-              <SelectDragIndicatorWrapper>
-                <SelectDragIndicator />
-              </SelectDragIndicatorWrapper>
-              <Heading className="text-md my-4">
-                Escolha o tipo de transação
-              </Heading>
-              <Divider />
-              <SelectItem label="Câmbio de moeda" value="cambio" />
-              <SelectItem label="DOC/TED" value="doc/ted" />
-              <SelectItem
-                label="Empréstimo e Financiamento"
-                value="emprestimo"
-              />
-              <SelectItem label="Depósito" value="deposito" />
-              <SelectItem label="Débito" value="debito" />
-              <SelectItem label="Crédito" value="credito" />
-            </SelectContent>
-          </SelectPortal>
-        </Select>
+      <FormControl className="mt-8" isInvalid={!!errors.transactionType}>
+        <Controller
+          control={control}
+          name="transactionType"
+          render={({ field: { onChange, value } }) => (
+            <Select onValueChange={onChange} selectedValue={value}>
+              <SelectTrigger
+                variant="outline"
+                size="xl"
+                className="h-12 bg-white border border-custom-my-dark-green rounded-lg"
+              >
+                <SelectInput
+                  className="flex-1 text-md placeholder:text-custom-my-placeholder"
+                  placeholder="Selecione o tipo de transação"
+                />
+                <SelectIcon className="mr-3" size="sm" as={ArrowDropdown} />
+              </SelectTrigger>
+              <SelectPortal>
+                <SelectBackdrop />
+                <SelectContent>
+                  <SelectDragIndicatorWrapper>
+                    <SelectDragIndicator />
+                  </SelectDragIndicatorWrapper>
+                  <Heading className="text-md my-4">
+                    Escolha o tipo de transação
+                  </Heading>
+                  <Divider />
+                  <SelectItem label="Câmbio de moeda" value="cambio" />
+                  <SelectItem label="DOC/TED" value="doc/ted" />
+                  <SelectItem
+                    label="Empréstimo e Financiamento"
+                    value="emprestimo"
+                  />
+                  <SelectItem label="Depósito" value="deposito" />
+                  <SelectItem label="Débito" value="debito" />
+                  <SelectItem label="Crédito" value="credito" />
+                </SelectContent>
+              </SelectPortal>
+            </Select>
+          )}
+        />
+        {errors.transactionType && (
+          <FormControlError>
+            <FormControlErrorText>
+              {errors.transactionType.message}
+            </FormControlErrorText>
+          </FormControlError>
+        )}
+      </FormControl>
 
-        <VStack>
+      <VStack>
+        <FormControl isInvalid={!!errors.value}>
           <FormControlLabel className="justify-center mt-4">
             <FormControlLabelText className="text-md font-semibold">
               Valor
             </FormControlLabelText>
           </FormControlLabel>
-          <Input className="h-12 bg-white border border-custom-my-dark-green rounded-lg mt-2">
-            <TextInputMask
-              type="money"
-              value={value}
-              onChangeText={(text, rawText) => {
-                console.log(rawText)
-                setValue(text)
-              }}
-              style={{
-                flex: 1,
-                height: '100%',
-                textAlign: 'center',
-                fontSize: 16,
-              }}
-              includeRawValueInChangeText
-            />
-          </Input>
+          <Controller
+            control={control}
+            name="value"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Input className="h-12 bg-white border border-custom-my-dark-green rounded-lg mt-2">
+                <TextInputMask
+                  type="money"
+                  value={value}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  style={{
+                    flex: 1,
+                    height: '100%',
+                    textAlign: 'center',
+                    fontSize: 16,
+                  }}
+                  includeRawValueInChangeText
+                />
+              </Input>
+            )}
+          />
+          {errors.value && (
+            <FormControlError>
+              <FormControlErrorText>
+                {errors.value.message}
+              </FormControlErrorText>
+            </FormControlError>
+          )}
+        </FormControl>
 
+        <FormControl>
           <FormControlLabel className="justify-center mt-4">
             <FormControlLabelText className="text-md font-semibold">
               Documentos relacionados
@@ -233,37 +257,40 @@ export function NewTransaction({ className, ...rest }: Props) {
               </Text>
             </Box>
           </Button>
+        </FormControl>
 
-          {transactionDocuments.map((document) => (
-            <Box
-              key={document.id}
-              className="bg-custom-my-light-gray rounded-lg p-2 pr-6 mt-2"
-            >
-              <HStack className="items-center justify-between">
-                <HStack className="items-center gap-4">
-                  {document.mimeType.includes('image') ? (
-                    <ModalImage uri={document.uri} />
-                  ) : (
-                    <Feather name="file-text" size={24} />
-                  )}
-                  <Text className="text-sm text-custom-my-gray font-body">
-                    {document.name}
-                  </Text>
-                </HStack>
-                <Button variant="link">
-                  <CloseBlack />
-                </Button>
+        {transactionDocuments.map((document) => (
+          <Box
+            key={document.uri}
+            className="bg-custom-my-light-gray rounded-lg p-2 pr-6 mt-2"
+          >
+            <HStack className="items-center justify-between">
+              <HStack className="items-center gap-4">
+                {document.mimeType.includes('image') ? (
+                  <ModalImage uri={document.uri} />
+                ) : (
+                  <Feather name="file-text" size={24} />
+                )}
+                <Text className="text-sm text-custom-my-gray font-body">
+                  {document.name}
+                </Text>
               </HStack>
-            </Box>
-          ))}
+              <Button variant="link">
+                <CloseBlack />
+              </Button>
+            </HStack>
+          </Box>
+        ))}
 
-          <Button className="h-12 bg-custom-my-dark-green rounded-lg mt-8">
-            <ButtonText className="text-white text-md font-semibold">
-              Concluir transação
-            </ButtonText>
-          </Button>
-        </VStack>
-      </FormControl>
+        <Button
+          className="h-12 bg-custom-my-dark-green rounded-lg mt-8"
+          onPress={handleSubmit(onCreateTransaction)}
+        >
+          <ButtonText className="text-white text-md font-semibold">
+            Concluir transação
+          </ButtonText>
+        </Button>
+      </VStack>
       <Illustration
         style={{
           marginTop: 32,
