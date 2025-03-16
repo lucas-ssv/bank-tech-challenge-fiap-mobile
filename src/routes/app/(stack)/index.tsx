@@ -4,6 +4,7 @@ import {
   MeusCartoes,
   Profile,
   Servicos,
+  Transacoes,
 } from '@/screens'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import Feather from '@expo/vector-icons/Feather'
@@ -75,6 +76,13 @@ export function StackRoutes({ navigation }: Props) {
         component={Profile}
         options={{
           title: 'Meu perfil',
+        }}
+      />
+      <Screen
+        name="Transacoes"
+        component={Transacoes}
+        options={{
+          title: 'Transações',
         }}
       />
     </Navigator>

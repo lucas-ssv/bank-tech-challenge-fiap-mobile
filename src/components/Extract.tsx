@@ -3,7 +3,6 @@ import {
   Box,
   Button,
   ButtonGroup,
-  ButtonIcon,
   Divider,
   Heading,
   HStack,
@@ -23,12 +22,12 @@ export function Extract({ className, ...rest }: Props) {
     >
       <HStack className="items-center justify-between gap-12">
         <Heading className="text-xl font-heading">Extrato</Heading>
-        <ButtonGroup className="flex-row gap-4">
+        <ButtonGroup className="flex-row gap-2">
           <Button className="h-12 w-12 bg-custom-my-dark-green rounded-full">
-            <ButtonIcon as={Pencil} className="w-7 h-7" />
+            <Pencil />
           </Button>
           <Button className="h-12 w-12 bg-custom-my-dark-green rounded-full">
-            <ButtonIcon as={Trash} className="w-7 h-7" />
+            <Trash />
           </Button>
         </ButtonGroup>
       </HStack>
