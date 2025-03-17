@@ -6,6 +6,7 @@ import {
   inMemoryPersistence
 } from 'firebase/auth'
 import { getFirestore } from 'firebase/firestore'
+import { getStorage } from 'firebase/storage'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { ENV } from '@/config/env'
 
@@ -21,3 +22,8 @@ export const auth = initializeAuth(app, {
 setPersistence(auth, inMemoryPersistence)
 
 export const db = getFirestore()
+
+export const storage = getStorage(
+  app,
+  'gs://bank-tech-challenge-mobile.firebasestorage.app'
+)

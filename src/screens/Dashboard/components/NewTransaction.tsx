@@ -44,6 +44,8 @@ import Feather from '@expo/vector-icons/Feather'
 import { z } from 'zod'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { randomUUID } from 'expo-crypto'
+import { uploadFile } from '@/firebase/storage'
 
 type Props = ComponentProps<typeof Box>
 
@@ -122,7 +124,16 @@ export function NewTransaction({ className, ...rest }: Props) {
   }
 
   const onCreateTransaction = async (data: CreateTransactionData) => {
-    console.log(data)
+    try {
+      console.log(data)
+      if (transactionDocuments.length > 0) {
+        for (const document of transactionDocuments) {
+          await uploadFile(document.uri, randomUUID())
+        }
+      }
+    } catch (error) {
+      toast('error', 'Ocorreu um erro ao realizar a transação.', error.code)
+    }
   }
 
   return (
