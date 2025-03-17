@@ -5,6 +5,7 @@ import {
   Box,
   Button,
   ButtonIcon,
+  ButtonSpinner,
   ButtonText,
   Divider,
   FormControl,
@@ -32,27 +33,33 @@ import Pixels from '@/assets/pixels-servicos.svg'
 import Illustration from '@/assets/ilustracao2.svg'
 import ArrowDropdown from '@/assets/arrow-dropdown.svg'
 import File from '@/assets/file.svg'
-import CloseBlack from '@/assets/close-black.svg'
 import { TextInputMask } from 'react-native-masked-text'
 import { ModalImage } from '@/components'
 import { Alert } from 'react-native'
-import { Timestamp } from 'firebase/firestore'
+import { addDoc, collection, Timestamp } from 'firebase/firestore'
 import { useAuth } from '@/contexts'
 import { useToast } from '@/hooks'
-import { TransactionDocument } from '@/models'
+import { TransactionDocument, TransactionType } from '@/models'
 import Feather from '@expo/vector-icons/Feather'
 import { z } from 'zod'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { randomUUID } from 'expo-crypto'
 import { uploadFile } from '@/firebase/storage'
+import { db } from '@/firebase/config'
+import {
+  transactionConverter,
+  transactionDocumentConverter,
+} from '@/firebase/converters'
 
 type Props = ComponentProps<typeof Box>
 
 type CreateTransactionData = z.infer<typeof schema>
 
 const schema = z.object({
-  transactionType: z.string({ message: 'O tipo da transação é obrigatório' }),
+  transactionType: z.nativeEnum(TransactionType, {
+    message: 'O tipo da transação é obrigatório',
+  }),
   value: z
     .string()
     .min(1, 'O valor é obrigatório')
@@ -70,7 +77,8 @@ export function NewTransaction({ className, ...rest }: Props) {
   const {
     control,
     handleSubmit,
-    formState: { errors },
+    reset,
+    formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -78,7 +86,7 @@ export function NewTransaction({ className, ...rest }: Props) {
     },
   })
   const [transactionDocuments, setTransactionDocuments] = useState<
-    TransactionDocument[]
+    Omit<TransactionDocument, 'transactionId'>[]
   >([])
 
   const handlePickerDocument = async () => {
@@ -107,7 +115,6 @@ export function NewTransaction({ className, ...rest }: Props) {
             setTransactionDocuments((prevState) => [
               ...prevState,
               {
-                userUid: user?.uid!,
                 name: asset.name,
                 uri: assetInfo.uri,
                 mimeType: asset.mimeType!,
@@ -125,15 +132,64 @@ export function NewTransaction({ className, ...rest }: Props) {
 
   const onCreateTransaction = async (data: CreateTransactionData) => {
     try {
-      console.log(data)
+      const { transactionType, value } = data
+      const numericValue = Number(
+        value.replace(/[^0-9,]/g, '').replace(',', '.'),
+      )
+
+      const transactionRef = await addDoc(
+        collection(db, 'transactions').withConverter(transactionConverter),
+        {
+          userUid: user?.uid!,
+          transactionType,
+          date: new Date(),
+          value: numericValue,
+          createdAt: Timestamp.now(),
+          updatedAt: Timestamp.now(),
+        },
+      )
+
       if (transactionDocuments.length > 0) {
         for (const document of transactionDocuments) {
-          await uploadFile(document.uri, randomUUID())
+          const fileName = randomUUID()
+          const documentUrl = (await uploadFile(
+            document.uri,
+            fileName,
+          )) as string
+
+          await addDoc(
+            collection(db, 'transaction-documents').withConverter(
+              transactionDocumentConverter,
+            ),
+            {
+              transactionId: transactionRef.id,
+              name: fileName,
+              mimeType: document.mimeType,
+              uri: documentUrl,
+              createdAt: Timestamp.now(),
+              updatedAt: Timestamp.now(),
+            },
+          )
         }
       }
+
+      toast('success', 'Transação realizada com sucesso!')
+      clearTransactionData()
     } catch (error) {
       toast('error', 'Ocorreu um erro ao realizar a transação.', error.code)
     }
+  }
+
+  const clearTransactionData = () => {
+    reset()
+    setTransactionDocuments([])
+  }
+
+  const handleRemoveDocument = (documentUri: string) => {
+    const newTransactionDocuments = transactionDocuments.filter(
+      (document) => document.uri !== documentUri,
+    )
+    setTransactionDocuments(newTransactionDocuments)
   }
 
   return (
@@ -273,7 +329,7 @@ export function NewTransaction({ className, ...rest }: Props) {
         {transactionDocuments.map((document) => (
           <Box
             key={document.uri}
-            className="bg-custom-my-light-gray rounded-lg p-2 pr-6 mt-2"
+            className="bg-custom-my-light-gray rounded-lg p-2 pr-4 mt-2"
           >
             <HStack className="items-center justify-between">
               <HStack className="items-center gap-4">
@@ -286,8 +342,11 @@ export function NewTransaction({ className, ...rest }: Props) {
                   {document.name}
                 </Text>
               </HStack>
-              <Button variant="link">
-                <CloseBlack />
+              <Button
+                variant="link"
+                onPress={() => handleRemoveDocument(document.uri)}
+              >
+                <Feather name="x" size={24} color="#000000" />
               </Button>
             </HStack>
           </Box>
@@ -296,7 +355,9 @@ export function NewTransaction({ className, ...rest }: Props) {
         <Button
           className="h-12 bg-custom-my-dark-green rounded-lg mt-8"
           onPress={handleSubmit(onCreateTransaction)}
+          isDisabled={isSubmitting}
         >
+          {isSubmitting && <ButtonSpinner className="text-white" />}
           <ButtonText className="text-white text-md font-semibold">
             Concluir transação
           </ButtonText>

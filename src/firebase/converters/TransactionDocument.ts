@@ -5,7 +5,7 @@ export const transactionDocumentConverter: FirestoreDataConverter<TransactionDoc
   {
     toFirestore: (transactionDocument: TransactionDocument): DocumentData => {
       return {
-        userUid: transactionDocument.userUid,
+        transactionId: transactionDocument.transactionId,
         name: transactionDocument.name,
         uri: transactionDocument.uri,
         mimeType: transactionDocument.mimeType,

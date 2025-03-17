@@ -31,9 +31,9 @@ export function ToastSuccess({ id, message }: ToastSuccessProps) {
   const uniqueToastId = 'toast-' + id
 
   return (
-    <Toast nativeID={uniqueToastId} action="error" variant="solid">
+    <Toast nativeID={uniqueToastId} action="success" variant="solid">
       <HStack className="items-center gap-2">
-        <Feather name="x-circle" color="#FFFFFF" size={20} />
+        <Feather name="check-circle" color="#FFFFFF" size={20} />
         <ToastTitle>Sucesso!</ToastTitle>
       </HStack>
       <ToastDescription>{message}</ToastDescription>

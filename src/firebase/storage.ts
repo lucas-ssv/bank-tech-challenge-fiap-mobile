@@ -22,7 +22,6 @@ export const uploadFile = async (uri: string, fileName: string) => {
         },
         async () => {
           const downloadUrl = await getDownloadURL(uploadTask.snapshot.ref)
-          console.log('Download URL:', downloadUrl)
           resolve(downloadUrl)
         }
       )
