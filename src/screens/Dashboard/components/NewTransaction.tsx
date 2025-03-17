@@ -142,7 +142,7 @@ export function NewTransaction({ className, ...rest }: Props) {
         {
           userUid: user?.uid!,
           transactionType,
-          date: new Date(),
+          date: Timestamp.now(),
           value: numericValue,
           createdAt: Timestamp.now(),
           updatedAt: Timestamp.now(),

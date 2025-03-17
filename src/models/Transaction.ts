@@ -13,7 +13,7 @@ export interface Transaction {
   id?: string
   userUid: string
   transactionType: TransactionType
-  date: Date
+  date: Timestamp
   value: number
   createdAt: Timestamp
   updatedAt: Timestamp
