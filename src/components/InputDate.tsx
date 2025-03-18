@@ -22,6 +22,7 @@ import {
   Text,
 } from './ui'
 import { useState } from 'react'
+import { formattedDate } from '@/utils'
 
 type Props = PressableProps & {
   date: Date
@@ -67,7 +68,7 @@ export function InputDate({
             className={`flex-1 ${textColor ? textColor : 'text-white'} text-sm font-medium`}
             numberOfLines={1}
           >
-            {date.toISOString()}
+            {formattedDate.format(date)}
           </Text>
           <Feather name="calendar" color="#FFFFFF" size={16} className="mr-2" />
         </HStack>
