@@ -57,7 +57,7 @@ type Props = {
 type UpdateTransactionData = z.infer<typeof schema>
 
 const schema = z.object({
-  transactionType: z.nativeEnum(TransactionType).nullable(),
+  transactionType: z.nativeEnum(TransactionType).nullish(),
   value: z
     .string()
     .min(1, 'O valor é obrigatório')
@@ -67,7 +67,7 @@ const schema = z.object({
       )
       return numericValue >= 1
     }, 'O valor mínimo é R$1,00')
-    .nullable(),
+    .nullish(),
 })
 
 export function ModalUpdateTransaction({ transaction }: Props) {
