@@ -18,6 +18,12 @@ export const formattedMoney = new Intl.NumberFormat('pt-br', {
   currency: 'BRL'
 })
 
+export const formatMonth = (date: Date) => {
+  const month = new Intl.DateTimeFormat('pt-BR', { month: 'long' }).format(date)
+
+  return month.charAt(0).toUpperCase() + month.slice(1)
+}
+
 export function getFormattedDate () {
   const date = new Date()
   const options: Intl.DateTimeFormatOptions = {
