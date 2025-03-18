@@ -63,12 +63,16 @@ export function InputDate({
   }
 
   const showDatePicker = () => {
-    DateTimePickerAndroid.open({
-      value: date,
-      mode: 'date',
-      display: 'calendar',
-      onChange: handleSelectedDate,
-    })
+    if (Platform.OS === 'android') {
+      DateTimePickerAndroid.open({
+        value: date,
+        mode: 'date',
+        display: 'calendar',
+        onChange: handleSelectedDate,
+      })
+    } else {
+      setOpen(true)
+    }
   }
 
   const showTimePicker = (selectedDate: Date) => {

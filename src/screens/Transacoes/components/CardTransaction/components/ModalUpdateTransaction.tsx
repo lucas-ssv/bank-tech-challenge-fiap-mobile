@@ -43,10 +43,8 @@ import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { formattedMoney } from '@/utils'
 import Feather from '@expo/vector-icons/Feather'
-import { doc, updateDoc } from 'firebase/firestore'
-import { db } from '@/firebase/config'
-import { transactionConverter } from '@/firebase/converters'
 import { useToast } from '@/hooks'
+import { useTransaction } from '@/contexts'
 
 type Props = {
   transaction: Transaction & {
@@ -72,6 +70,7 @@ const schema = z.object({
 })
 
 export function ModalUpdateTransaction({ transaction }: Props) {
+  const { updateTransaction } = useTransaction()
   const toast = useToast()
   const {
     control,
@@ -93,16 +92,13 @@ export function ModalUpdateTransaction({ transaction }: Props) {
       const numericValue = Number(
         value!.replace(/[^0-9,]/g, '').replace(',', '.'),
       )
-      const transactionRef = doc(
-        db,
-        'transactions',
-        transaction.id!,
-      ).withConverter(transactionConverter)
-      await updateDoc(transactionRef, {
-        transactionType,
+      await updateTransaction(transaction.id!, {
+        transactionType: transactionType!,
         value: numericValue,
         date,
       })
+
+      setIsOpen(false)
     } catch (error) {
       toast('error', 'Ocorreu um erro ao atualizar a transação', error.code)
     }

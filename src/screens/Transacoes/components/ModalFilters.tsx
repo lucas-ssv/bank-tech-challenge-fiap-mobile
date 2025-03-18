@@ -2,6 +2,7 @@ import { useState } from 'react'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import {
   Button,
+  ButtonSpinner,
   ButtonText,
   Divider,
   FormControl,
@@ -36,15 +37,7 @@ import { TransactionType } from '@/models'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { TextInputMask } from 'react-native-masked-text'
-import {
-  collection,
-  getDocs,
-  query,
-  Timestamp,
-  where,
-} from 'firebase/firestore'
-import { db } from '@/firebase/config'
-import { useAuth } from '@/contexts'
+import { useTransaction } from '@/contexts'
 import { useToast } from '@/hooks'
 
 type FilterTransactionData = z.infer<typeof schema>
@@ -56,17 +49,23 @@ const schema = z.object({
 })
 
 export function ModalFilters() {
-  const { user } = useAuth()
+  const { fetchTransactions, filterTransactions } = useTransaction()
   const toast = useToast()
-  const { control, handleSubmit } = useForm({
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { isSubmitting },
+  } = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
+      transactionType: TransactionType.CAMBIO_DE_MOEDA,
       minValue: 'R$0,00',
       maxValue: 'R$0,00',
     },
   })
   const [isOpen, setIsOpen] = useState(false)
-  const [date, setDate] = useState(new Date())
+  const [date, setDate] = useState<Date>(new Date())
 
   const onFilterTransaction = async (data: FilterTransactionData) => {
     try {
@@ -77,41 +76,24 @@ export function ModalFilters() {
       const numericMaxValue = Number(
         maxValue!.replace(/[^0-9,]/g, '').replace(',', '.'),
       )
-      const transactionsRef = collection(db, 'transactions')
 
-      const startOfDay = new Date(date)
-      startOfDay.setHours(0, 0, 0, 0)
-
-      const endOfDay = new Date(date)
-      endOfDay.setHours(23, 59, 59, 999)
-
-      const filters = [
-        where('userUid', '==', user!.uid),
-        where('date', '>=', Timestamp.fromDate(startOfDay)),
-        where('date', '<=', Timestamp.fromDate(endOfDay)),
-      ]
-
-      if (transactionType) {
-        filters.push(where('transactionType', '==', transactionType))
-      }
-
-      if (numericMinValue > 0) {
-        filters.push(where('value', '>=', numericMinValue))
-      }
-
-      if (numericMaxValue > 0) {
-        filters.push(where('value', '<=', numericMaxValue))
-      }
-
-      const q = query(transactionsRef, ...filters)
-
-      const querySnapshot = await getDocs(q)
-      querySnapshot.forEach((doc) => {
-        console.log(doc.id, ' => ', doc.data())
+      await filterTransactions({
+        transactionType,
+        minValue: numericMinValue,
+        maxValue: numericMaxValue,
+        date,
       })
+
+      setIsOpen(false)
     } catch (error) {
       toast('error', 'Ocorreu um erro ao filtrar pelas transações', error.code)
     }
+  }
+
+  const handleResetFields = () => {
+    fetchTransactions()
+    reset()
+    setIsOpen(false)
   }
 
   return (
@@ -260,6 +242,7 @@ export function ModalFilters() {
               <Button
                 className="flex-1 h-12 bg-custom-my-extract-date-color rounded-lg"
                 variant="solid"
+                onPress={handleResetFields}
               >
                 <ButtonText className="text-md">Limpar</ButtonText>
               </Button>
@@ -267,7 +250,9 @@ export function ModalFilters() {
                 className="flex-1 h-12 bg-custom-my-dark-green rounded-lg"
                 variant="solid"
                 onPress={handleSubmit(onFilterTransaction)}
+                isDisabled={isSubmitting}
               >
+                {isSubmitting && <ButtonSpinner className="text-white" />}
                 <ButtonText className="text-md">Filtrar</ButtonText>
               </Button>
             </HStack>
