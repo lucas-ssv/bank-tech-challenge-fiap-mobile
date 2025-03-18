@@ -10,69 +10,72 @@ import {
 import { BarChart } from 'react-native-chart-kit'
 import { LinearGradient } from 'expo-linear-gradient'
 import { Dimensions } from 'react-native'
-import { ComponentProps, useContext, useEffect, useState } from 'react'
+import { ComponentProps, useEffect, useState } from 'react'
 import { InputDate } from '@/components'
-import { collection, getDocs, getFirestore, query, Timestamp, where } from 'firebase/firestore'
-import { AuthContext } from '@/contexts'
+import {
+  collection,
+  getDocs,
+  getFirestore,
+  query,
+  Timestamp,
+  where,
+} from 'firebase/firestore'
+import { useAuth } from '@/contexts'
 
 type Props = ComponentProps<typeof Box>
 
 interface Transacao {
-  id: string;
-  transactionType: string;
-  value: number;
-  date: Timestamp;
+  id: string
+  transactionType: string
+  value: number
+  date: Timestamp
 }
 
 export function FinancialFlowChart({ ...rest }: Props) {
+  const { user } = useAuth()
   const screenWidth = Dimensions.get('window').width
   const [startDate, setStartDate] = useState<Date>(() => {
-    const today = new Date();
-    return new Date(today.getFullYear(), today.getMonth(), 1);
-  });
+    const today = new Date()
+    return new Date(today.getFullYear(), today.getMonth(), 1)
+  })
   const [endDate, setEndDate] = useState<Date>(new Date())
 
-  const authContext = useContext(AuthContext)
-  const { user } = authContext
-
-  const [transacoes, setTransacoes] = useState<Transacao[]>([]);
-  const labels = transacoes.map((transacao) => transacao.transactionType);
-  const datasets = transacoes.map((transacao) => transacao.value);
-
+  const [transacoes, setTransacoes] = useState<Transacao[]>([])
+  const labels = transacoes.map((transacao) => transacao.transactionType)
+  const datasets = transacoes.map((transacao) => transacao.value)
 
   useEffect(() => {
     const fetchTransacoes = async () => {
       try {
-        const db = getFirestore();
-        const transacoesRef = collection(db, "transactions");
+        const db = getFirestore()
+        const transacoesRef = collection(db, 'transactions')
 
-         const startTimestamp = Timestamp.fromDate(startDate);
-         const endTimestamp = Timestamp.fromDate(endDate);
- 
-         const q = query(
-           transacoesRef,
-           where("userUid", "==", user?.uid),
-           where("date", ">=", startTimestamp),
-           where("date", "<=", endTimestamp)
-         );
+        const startTimestamp = Timestamp.fromDate(startDate)
+        const endTimestamp = Timestamp.fromDate(endDate)
 
-        const querySnapshot = await getDocs(q);
+        const q = query(
+          transacoesRef,
+          where('userUid', '==', user?.uid),
+          where('date', '>=', startTimestamp),
+          where('date', '<=', endTimestamp),
+        )
+
+        const querySnapshot = await getDocs(q)
         const listaTransacoes = querySnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
-        })) as Transacao[];
+        })) as Transacao[]
 
-        setTransacoes(listaTransacoes);
+        setTransacoes(listaTransacoes)
       } catch (error) {
-        console.error("Erro ao buscar transações:", error);
+        console.error('Erro ao buscar transações:', error)
       }
-    };
+    }
 
     if (user?.uid) {
-      fetchTransacoes(); 
+      fetchTransacoes()
     }
-  }, [user?.uid,  startDate, endDate]); 
-  
+  }, [user?.uid, startDate, endDate])
 
   return (
     <Box className="flex-1 mx-auto shadow-hard-3 mt-6" {...rest}>

@@ -1,22 +1,16 @@
-import { ComponentProps, useContext } from 'react'
+import { ComponentProps } from 'react'
 import { TouchableOpacity } from 'react-native'
 import { Box, Divider, Heading, HStack, Text } from '@/components/ui'
 import EyeIcon from '@/assets/olho.svg'
 import Pixels from '@/assets/pixels.svg'
 import Illustration from '@/assets/ilustracao.svg'
-import { AuthContext } from '@/contexts'
+import { useAuth } from '@/contexts'
+import { getFormattedDate } from '@/utils'
 
 type Props = ComponentProps<typeof Box>
 
 export function Welcome({ ...rest }: Props) {
-  const authContext = useContext(AuthContext)
-  const { user } = authContext
-
-  function getFormattedDate() {
-    const date = new Date()
-    const options: Intl.DateTimeFormatOptions = { weekday: "long", day: "2-digit", month: "2-digit", year: "numeric" }
-    return date.toLocaleDateString("pt-BR", options)
-  }
+  const { user } = useAuth()
 
   return (
     <Box

@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import {
   Box,
   Button,
@@ -11,14 +12,12 @@ import Illustration from '@/assets/ilu-profile.svg'
 import { ScrollView } from 'react-native'
 import { Input } from './components'
 
-import { AuthContext } from '@/contexts'
-import { useContext, useState } from "react"
+import { useAuth } from '@/contexts'
 
 export function Profile() {
-  const authContext = useContext(AuthContext)
-  const { user } = authContext
-  const [name, setName] = useState(user?.displayName || '');
-  const [email, setEmail] = useState(user?.email || '');
+  const { user } = useAuth()
+  const [name, setName] = useState(user?.displayName || '')
+  const [email, setEmail] = useState(user?.email || '')
 
   return (
     <ScrollView
@@ -45,8 +44,20 @@ export function Profile() {
           </Heading>
 
           <FormControl>
-            <Input label="Nome" type="text" value={name} onChangeText={setName} placeholder="Nome" />
-            <Input label="E-mail" type="text" value={email} onChangeText={setEmail} placeholder="E-mail" />
+            <Input
+              label="Nome"
+              type="text"
+              value={name}
+              onChangeText={setName}
+              placeholder="Nome"
+            />
+            <Input
+              label="E-mail"
+              type="text"
+              value={email}
+              onChangeText={setEmail}
+              placeholder="E-mail"
+            />
             <Input label="Senha" type="password" placeholder="Senha" />
             <Button className="h-12 bg-custom-my-orange rounded-lg mt-6">
               <ButtonText className="text-md">Salvar alterações</ButtonText>
