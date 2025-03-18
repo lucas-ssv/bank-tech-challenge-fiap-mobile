@@ -7,7 +7,7 @@ import Illustration from '@/assets/ilustracao.svg'
 import { useAuth } from '@/contexts'
 import { getFormattedDate } from '@/utils'
 import { BlurView } from 'expo-blur'
-import { getStorageBalanceBlurred, setStorageBalanceBlurred } from '@/storage'
+import { getStorageBalanceBlurred } from '@/storage'
 
 type Props = ComponentProps<typeof Box>
 
@@ -15,18 +15,20 @@ export function Welcome({ ...rest }: Props) {
   const { user } = useAuth()
   const [balanceBlurred, setBalanceBlurred] = useState(true)
 
-  const handleBlurredBalance = async () => {
-    await setStorageBalanceBlurred(String(!balanceBlurred))
-    setBalanceBlurred(!balanceBlurred)
-  }
-
   useEffect(() => {
-    async function loadBalanceBlurred() {
-      const balanceBlurred = await getStorageBalanceBlurred()
-      setBalanceBlurred(Boolean(balanceBlurred))
+    const loadMoneyValue = async () => {
+      try {
+        const value = await getStorageBalanceBlurred()
+        if (value) {
+          setBalanceBlurred(balanceBlurred)
+        }
+      } catch (error) {
+        console.error('Erro ao carregar valor do AsyncStorage:', error)
+      }
     }
-    loadBalanceBlurred()
-  }, [])
+
+    loadMoneyValue()
+  }, [balanceBlurred])
 
   return (
     <Box
@@ -63,7 +65,7 @@ export function Welcome({ ...rest }: Props) {
       </Text>
       <HStack className="items-center gap-6 mt-10">
         <Heading className="text-white font-semibold text-lg">Saldo</Heading>
-        <TouchableOpacity onPress={handleBlurredBalance}>
+        <TouchableOpacity onPress={() => setBalanceBlurred(!balanceBlurred)}>
           {balanceBlurred ? (
             <MaterialIcons name="visibility" size={20} color="#FFFFFF" />
           ) : (

@@ -7,10 +7,13 @@ import {
 } from '@react-navigation/drawer'
 import Avatar from '@/assets/avatar.svg'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useAuth } from '@/contexts'
 
 type Props = DrawerContentComponentProps
 
 export function DrawerContent(props: Props) {
+  const { user } = useAuth()
+
   return (
     <DrawerContentScrollView
       bounces={false}
@@ -27,9 +30,11 @@ export function DrawerContent(props: Props) {
           <Pressable>
             <Icon as={Avatar} className="w-12 h-12 text-typography-[#FF5031]" />
           </Pressable>
-          <Text className="text-white text-lg font-medium mt-2">John Due</Text>
+          <Text className="text-white text-lg font-medium mt-2">
+            {user?.displayName}
+          </Text>
           <Text className="text-white text-sm font-body mt-1">
-            johndue@email.com
+            {user?.email}
           </Text>
         </VStack>
       </SafeAreaView>
