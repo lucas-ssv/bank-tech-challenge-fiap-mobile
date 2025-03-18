@@ -6,6 +6,7 @@ import {
 import { Transaction, TransactionDocument, TransactionType } from '@/models'
 import {
   collection,
+  deleteDoc,
   doc,
   getDocs,
   onSnapshot,
@@ -51,6 +52,7 @@ type TransactionContextProps = {
     data: TransactionUpdateData,
   ) => Promise<void>
   filterTransactions: (data: TransactionFilter) => Promise<void>
+  removeTransaction: (transactionId: string) => Promise<void>
 }
 
 const TransactionContext = createContext<TransactionContextProps>(
@@ -206,6 +208,14 @@ export function TransactionProvider({ children }: PropsWithChildren) {
     }
   }
 
+  const removeTransaction = async (transactionId: string) => {
+    try {
+      await deleteDoc(doc(db, 'transactions', transactionId))
+    } catch (error) {
+      throw error
+    }
+  }
+
   useEffect(() => {
     if (!user?.uid) return
 
@@ -245,6 +255,7 @@ export function TransactionProvider({ children }: PropsWithChildren) {
         fetchTransactions,
         updateTransaction,
         filterTransactions,
+        removeTransaction,
       }}
     >
       {children}
