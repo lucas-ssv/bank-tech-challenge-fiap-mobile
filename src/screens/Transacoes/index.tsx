@@ -25,33 +25,40 @@ export function Transacoes() {
   const toast = useToast()
   const [transactions, setTransactions] = useState<CardTransactionProps[]>([])
 
-  const fetchTransactionDocuments = async (transactionId: string) => {
-    try {
-      const transactionDocumentsRef = collection(
-        db,
-        'transaction-documents',
-      ).withConverter(transactionDocumentConverter)
-      const q = query(
-        transactionDocumentsRef,
-        where('transactionId', '==', transactionId),
-      )
-      const querySnapshot = await getDocs(q)
-      const transactionDocuments: TransactionDocument[] = []
+  const fetchTransactionDocuments = useCallback(
+    async (transactionId: string) => {
+      try {
+        const transactionDocumentsRef = collection(
+          db,
+          'transaction-documents',
+        ).withConverter(transactionDocumentConverter)
+        const q = query(
+          transactionDocumentsRef,
+          where('transactionId', '==', transactionId),
+        )
+        const querySnapshot = await getDocs(q)
+        const transactionDocuments: TransactionDocument[] = []
 
-      querySnapshot.forEach((doc) => {
-        const document = doc.data()
-        transactionDocuments.push({
-          id: doc.id,
-          ...document,
+        querySnapshot.forEach((doc) => {
+          const document = doc.data()
+          transactionDocuments.push({
+            id: doc.id,
+            ...document,
+          })
         })
-      })
 
-      return transactionDocuments
-    } catch (error) {
-      console.error(error)
-      return []
-    }
-  }
+        return transactionDocuments
+      } catch (error) {
+        toast(
+          'error',
+          'Ocorreu um erro ao buscar os documentos da transação',
+          error.code,
+        )
+        return []
+      }
+    },
+    [toast],
+  )
 
   const fetchTransactions = useCallback(async () => {
     try {
@@ -83,7 +90,7 @@ export function Transacoes() {
     } catch (error) {
       toast('error', 'Ocorreu um erro ao listar as transações.', error.code)
     }
-  }, [user, toast])
+  }, [user, toast, fetchTransactionDocuments])
 
   useEffect(() => {
     fetchTransactions()

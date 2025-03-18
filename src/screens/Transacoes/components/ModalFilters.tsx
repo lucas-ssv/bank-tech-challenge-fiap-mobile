@@ -45,6 +45,7 @@ import {
 } from 'firebase/firestore'
 import { db } from '@/firebase/config'
 import { useAuth } from '@/contexts'
+import { useToast } from '@/hooks'
 
 type FilterTransactionData = z.infer<typeof schema>
 
@@ -56,10 +57,10 @@ const schema = z.object({
 
 export function ModalFilters() {
   const { user } = useAuth()
+  const toast = useToast()
   const { control, handleSubmit } = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      transactionType: TransactionType.CAMBIO_DE_MOEDA,
       minValue: 'R$0,00',
       maxValue: 'R$0,00',
     },
@@ -70,7 +71,6 @@ export function ModalFilters() {
   const onFilterTransaction = async (data: FilterTransactionData) => {
     try {
       const { transactionType, minValue, maxValue } = data
-      console.log(date)
       const numericMinValue = Number(
         minValue!.replace(/[^0-9,]/g, '').replace(',', '.'),
       )
@@ -87,10 +87,13 @@ export function ModalFilters() {
 
       const filters = [
         where('userUid', '==', user!.uid),
-        where('transactionType', '==', transactionType),
         where('date', '>=', Timestamp.fromDate(startOfDay)),
         where('date', '<=', Timestamp.fromDate(endOfDay)),
       ]
+
+      if (transactionType) {
+        filters.push(where('transactionType', '==', transactionType))
+      }
 
       if (numericMinValue > 0) {
         filters.push(where('value', '>=', numericMinValue))
@@ -107,7 +110,7 @@ export function ModalFilters() {
         console.log(doc.id, ' => ', doc.data())
       })
     } catch (error) {
-      console.error(error)
+      toast('error', 'Ocorreu um erro ao filtrar pelas transações', error.code)
     }
   }
 

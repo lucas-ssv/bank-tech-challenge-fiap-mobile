@@ -22,11 +22,12 @@ import {
   Text,
 } from './ui'
 import { useState } from 'react'
-import { formattedDate } from '@/utils'
+import { formattedDate, formattedDateTime } from '@/utils'
 
 type Props = PressableProps & {
   date: Date
   setDate: React.Dispatch<React.SetStateAction<Date>>
+  hasTime?: boolean
   textColor?: string
 }
 
@@ -34,33 +35,56 @@ export function InputDate({
   date,
   setDate,
   className,
+  hasTime = false,
   textColor,
   ...rest
 }: Props) {
   const [open, setOpen] = useState(false)
 
-  const handleSelectedDate = (event: DateTimePickerEvent, date?: Date) => {
-    if (date && event.type === 'set') {
-      setDate(date)
+  const handleSelectedDate = (
+    _event: DateTimePickerEvent,
+    selectedDate?: Date,
+  ) => {
+    if (selectedDate) {
+      setDate(selectedDate)
+      if (hasTime) {
+        showTimePicker(selectedDate)
+      }
     }
   }
 
-  const handleDatePicker = () => {
-    if (Platform.OS === 'android') {
-      DateTimePickerAndroid.open({
-        value: date,
-        onChange: handleSelectedDate,
-      })
-    } else {
-      setOpen(true)
+  const handleSelectedTime = (
+    _event: DateTimePickerEvent,
+    selectedTime?: Date,
+  ) => {
+    if (selectedTime) {
+      setDate(selectedTime)
     }
+  }
+
+  const showDatePicker = () => {
+    DateTimePickerAndroid.open({
+      value: date,
+      mode: 'date',
+      display: 'calendar',
+      onChange: handleSelectedDate,
+    })
+  }
+
+  const showTimePicker = (selectedDate: Date) => {
+    DateTimePickerAndroid.open({
+      value: selectedDate,
+      mode: 'time',
+      display: 'clock',
+      onChange: handleSelectedTime,
+    })
   }
 
   return (
     <>
       <Pressable
         className={`justify-center rounded-lg border border-white h-12 pl-3 ${className}`}
-        onPress={handleDatePicker}
+        onPress={showDatePicker}
         {...rest}
       >
         <HStack className="items-center justify-between gap-4">
@@ -68,7 +92,9 @@ export function InputDate({
             className={`flex-1 ${textColor ? textColor : 'text-white'} text-sm font-medium`}
             numberOfLines={1}
           >
-            {formattedDate.format(date)}
+            {hasTime
+              ? formattedDateTime.format(date)
+              : formattedDate.format(date)}
           </Text>
           <Feather name="calendar" color="#FFFFFF" size={16} className="mr-2" />
         </HStack>
@@ -94,7 +120,7 @@ export function InputDate({
               <Box>
                 <DateTimePicker
                   value={date}
-                  mode="date"
+                  mode={hasTime ? 'datetime' : 'date'}
                   display="spinner"
                   onChange={handleSelectedDate}
                 />

@@ -46,6 +46,7 @@ import Feather from '@expo/vector-icons/Feather'
 import { doc, updateDoc } from 'firebase/firestore'
 import { db } from '@/firebase/config'
 import { transactionConverter } from '@/firebase/converters'
+import { useToast } from '@/hooks'
 
 type Props = {
   transaction: Transaction & {
@@ -71,6 +72,7 @@ const schema = z.object({
 })
 
 export function ModalUpdateTransaction({ transaction }: Props) {
+  const toast = useToast()
   const {
     control,
     handleSubmit,
@@ -88,7 +90,6 @@ export function ModalUpdateTransaction({ transaction }: Props) {
   const onUpdateTransaction = async (data: UpdateTransactionData) => {
     try {
       const { transactionType, value } = data
-      console.log(date)
       const numericValue = Number(
         value!.replace(/[^0-9,]/g, '').replace(',', '.'),
       )
@@ -103,7 +104,7 @@ export function ModalUpdateTransaction({ transaction }: Props) {
         date,
       })
     } catch (error) {
-      console.error(error)
+      toast('error', 'Ocorreu um erro ao atualizar a transação', error.code)
     }
   }
 
@@ -197,6 +198,7 @@ export function ModalUpdateTransaction({ transaction }: Props) {
                 textColor="text-black"
                 date={date}
                 setDate={setDate}
+                hasTime
               />
             </FormControl>
 
