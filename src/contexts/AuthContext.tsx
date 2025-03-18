@@ -12,11 +12,11 @@ type AuthContextProps = {
   user: User | null
 }
 
-const AuthContext = createContext<AuthContextProps>({} as AuthContextProps)
+export const AuthContext = createContext<AuthContextProps>({} as AuthContextProps)
 
 export function AuthProvider({ children }: PropsWithChildren) {
   const [user, setUser] = useState<User | null>(null)
-
+  
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
