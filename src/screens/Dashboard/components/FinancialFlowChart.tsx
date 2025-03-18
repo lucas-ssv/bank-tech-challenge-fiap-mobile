@@ -10,15 +10,69 @@ import {
 import { BarChart } from 'react-native-chart-kit'
 import { LinearGradient } from 'expo-linear-gradient'
 import { Dimensions } from 'react-native'
-import { ComponentProps, useState } from 'react'
+import { ComponentProps, useContext, useEffect, useState } from 'react'
 import { InputDate } from '@/components'
+import { collection, getDocs, getFirestore, query, Timestamp, where } from 'firebase/firestore'
+import { AuthContext } from '@/contexts'
 
 type Props = ComponentProps<typeof Box>
 
+interface Transacao {
+  id: string;
+  transactionType: string;
+  value: number;
+  date: Timestamp;
+}
+
 export function FinancialFlowChart({ ...rest }: Props) {
   const screenWidth = Dimensions.get('window').width
-  const [startDate, setStartDate] = useState<Date>(new Date())
+  const [startDate, setStartDate] = useState<Date>(() => {
+    const today = new Date();
+    return new Date(today.getFullYear(), today.getMonth(), 1);
+  });
   const [endDate, setEndDate] = useState<Date>(new Date())
+
+  const authContext = useContext(AuthContext)
+  const { user } = authContext
+
+  const [transacoes, setTransacoes] = useState<Transacao[]>([]);
+  const labels = transacoes.map((transacao) => transacao.transactionType);
+  const datasets = transacoes.map((transacao) => transacao.value);
+
+
+  useEffect(() => {
+    const fetchTransacoes = async () => {
+      try {
+        const db = getFirestore();
+        const transacoesRef = collection(db, "transactions");
+
+         const startTimestamp = Timestamp.fromDate(startDate);
+         const endTimestamp = Timestamp.fromDate(endDate);
+ 
+         const q = query(
+           transacoesRef,
+           where("userUid", "==", user?.uid),
+           where("date", ">=", startTimestamp),
+           where("date", "<=", endTimestamp)
+         );
+
+        const querySnapshot = await getDocs(q);
+        const listaTransacoes = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        })) as Transacao[];
+
+        setTransacoes(listaTransacoes);
+      } catch (error) {
+        console.error("Erro ao buscar transações:", error);
+      }
+    };
+
+    if (user?.uid) {
+      fetchTransacoes(); 
+    }
+  }, [user?.uid,  startDate, endDate]); 
+  
 
   return (
     <Box className="flex-1 mx-auto shadow-hard-3 mt-6" {...rest}>
@@ -65,17 +119,17 @@ export function FinancialFlowChart({ ...rest }: Props) {
         </VStack>
         <BarChart
           data={{
-            labels: ['Depósito', 'DOC/TED'],
+            labels,
             datasets: [
               {
-                data: [Math.random() * 100, Math.random() * 100],
+                data: datasets,
               },
             ],
           }}
           width={screenWidth - 48}
           height={280}
-          yAxisLabel="$"
-          yAxisSuffix="k"
+          yAxisLabel="R$"
+          yAxisSuffix=""
           yAxisInterval={1}
           chartConfig={{
             backgroundColor: '#e26a00',
