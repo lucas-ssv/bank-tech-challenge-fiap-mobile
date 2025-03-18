@@ -47,7 +47,7 @@ export function CardTransaction({ transaction }: Props) {
         </VStack>
 
         <HStack className="justify-end gap-2">
-          <ModalUpdateTransaction />
+          <ModalUpdateTransaction transaction={transaction} />
           <Button className="h-12 w-12 bg-custom-my-dark-green rounded-full p-0">
             <Trash />
           </Button>
