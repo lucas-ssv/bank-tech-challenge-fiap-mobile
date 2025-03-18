@@ -47,6 +47,7 @@ type TransactionFilter = {
 type TransactionContextProps = {
   transactions: CardTransactionProps[]
   fetchTransactions: () => Promise<void>
+  fetchFinancialFlow: (startDate: Date, endDate: Date) => Promise<void>
   updateTransaction: (
     transactionId: string,
     data: TransactionUpdateData,
@@ -124,6 +125,45 @@ export function TransactionProvider({ children }: PropsWithChildren) {
       throw error
     }
   }, [user, fetchTransactionDocuments])
+
+  const fetchFinancialFlow = async (startDate: Date, endDate: Date) => {
+    try {
+      const transacoesRef = collection(db, 'transactions').withConverter(
+        transactionConverter,
+      )
+
+      const startTimestamp = Timestamp.fromDate(startDate)
+      const endTimestamp = Timestamp.fromDate(endDate)
+
+      const q = query(
+        transacoesRef,
+        where('userUid', '==', user?.uid),
+        where('date', '>=', startTimestamp),
+        where('date', '<=', endTimestamp),
+      )
+
+      const querySnapshot = await getDocs(q)
+      const transactions: CardTransactionProps[] = await Promise.all(
+        querySnapshot.docs.map(async (doc) => {
+          const transactionId = doc.id
+          const transaction = doc.data()
+          const type = getIncomeOutcomeTransaction(transaction.transactionType)
+          const documents = await fetchTransactionDocuments(transactionId)
+
+          return {
+            id: transactionId,
+            documents,
+            type,
+            ...transaction,
+          }
+        }),
+      )
+
+      setTransactions(transactions)
+    } catch (error) {
+      console.error('Erro ao buscar transações:', error)
+    }
+  }
 
   const updateTransaction = async (
     transactionId: string,
@@ -253,6 +293,7 @@ export function TransactionProvider({ children }: PropsWithChildren) {
       value={{
         transactions,
         fetchTransactions,
+        fetchFinancialFlow,
         updateTransaction,
         filterTransactions,
         removeTransaction,

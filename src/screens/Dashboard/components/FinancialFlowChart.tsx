@@ -10,69 +10,66 @@ import {
 import { BarChart } from 'react-native-chart-kit'
 import { LinearGradient } from 'expo-linear-gradient'
 import { Dimensions } from 'react-native'
-import { ComponentProps, useContext, useEffect, useState } from 'react'
+import { ComponentProps, useEffect, useState } from 'react'
 import { InputDate } from '@/components'
-import { collection, getDocs, getFirestore, query, Timestamp, where } from 'firebase/firestore'
-import { AuthContext } from '@/contexts'
+import { collection, onSnapshot, query, where } from 'firebase/firestore'
+import { useAuth } from '@/contexts'
+import { db } from '@/firebase/config'
+import { transactionConverter } from '@/firebase/converters'
+import { Transaction } from '@/models'
 
 type Props = ComponentProps<typeof Box>
 
-interface Transacao {
-  id: string;
-  transactionType: string;
-  value: number;
-  date: Timestamp;
-}
-
 export function FinancialFlowChart({ ...rest }: Props) {
+  const { user } = useAuth()
   const screenWidth = Dimensions.get('window').width
   const [startDate, setStartDate] = useState<Date>(() => {
-    const today = new Date();
-    return new Date(today.getFullYear(), today.getMonth(), 1);
-  });
+    const today = new Date()
+    return new Date(today.getFullYear(), today.getMonth(), 1)
+  })
   const [endDate, setEndDate] = useState<Date>(new Date())
 
-  const authContext = useContext(AuthContext)
-  const { user } = authContext
-
-  const [transacoes, setTransacoes] = useState<Transacao[]>([]);
-  const labels = transacoes.map((transacao) => transacao.transactionType);
-  const datasets = transacoes.map((transacao) => transacao.value);
-
+  const [transactions, setTransactions] = useState<Transaction[]>([])
+  const labels = transactions.map((transaction) => transaction.transactionType)
+  const datasets = transactions.map((transaction) => transaction.value)
 
   useEffect(() => {
-    const fetchTransacoes = async () => {
-      try {
-        const db = getFirestore();
-        const transacoesRef = collection(db, "transactions");
+    const transactionsRef = collection(db, 'transactions').withConverter(
+      transactionConverter,
+    )
 
-         const startTimestamp = Timestamp.fromDate(startDate);
-         const endTimestamp = Timestamp.fromDate(endDate);
- 
-         const q = query(
-           transacoesRef,
-           where("userUid", "==", user?.uid),
-           where("date", ">=", startTimestamp),
-           where("date", "<=", endTimestamp)
-         );
+    const startOfDay = new Date(startDate)
+    startOfDay.setHours(0, 0, 0, 0)
 
-        const querySnapshot = await getDocs(q);
-        const listaTransacoes = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        })) as Transacao[];
+    const endOfDay = new Date(endDate)
+    endOfDay.setHours(23, 59, 59, 999)
 
-        setTransacoes(listaTransacoes);
-      } catch (error) {
-        console.error("Erro ao buscar transações:", error);
-      }
-    };
+    const q = query(
+      transactionsRef,
+      where('userUid', '==', user?.uid),
+      where('date', '>=', startOfDay),
+      where('date', '<=', endOfDay),
+    )
+    const unsubscribe = onSnapshot(q, async (querySnapshot) => {
+      if (querySnapshot.empty) return
 
-    if (user?.uid) {
-      fetchTransacoes(); 
-    }
-  }, [user?.uid,  startDate, endDate]); 
-  
+      const transactions: Transaction[] = await Promise.all(
+        querySnapshot.docs.map(async (doc) => {
+          const transactionId = doc.id
+          const transaction = doc.data()
+
+          return {
+            id: transactionId,
+            ...transaction,
+          }
+        }),
+      )
+
+      setTransactions(transactions)
+    })
+
+    return () => unsubscribe()
+  }, [user, startDate, endDate])
 
   return (
     <Box className="flex-1 mx-auto shadow-hard-3 mt-6" {...rest}>

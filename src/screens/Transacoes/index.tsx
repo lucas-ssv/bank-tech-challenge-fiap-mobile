@@ -43,10 +43,11 @@ export function Transacoes() {
 
           <VStack className="gap-4 mt-8">
             {transactions.length > 0 ? (
-              transactions.map((transaction) => (
+              transactions.map((transaction, index) => (
                 <CardTransaction
                   key={transaction.id}
                   transaction={transaction}
+                  index={index}
                 />
               ))
             ) : (
