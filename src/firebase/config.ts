@@ -23,7 +23,4 @@ setPersistence(auth, inMemoryPersistence)
 
 export const db = getFirestore()
 
-export const storage = getStorage(
-  app,
-  'gs://bank-tech-challenge-mobile.firebasestorage.app'
-)
+export const storage = getStorage(app, ENV.BUCKET_URL)

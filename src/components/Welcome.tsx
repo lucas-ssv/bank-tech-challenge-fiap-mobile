@@ -12,7 +12,8 @@ import { getStorageBalanceBlurred } from '@/storage'
 type Props = ComponentProps<typeof Box>
 
 export function Welcome({ ...rest }: Props) {
-  const { user } = useAuth()
+  const { userData } = useAuth()
+
   const [balanceBlurred, setBalanceBlurred] = useState(true)
 
   useEffect(() => {
@@ -58,7 +59,7 @@ export function Welcome({ ...rest }: Props) {
         }}
       />
       <Heading className="text-white text-center font-semibold text-xl">
-        Olá, {user?.displayName} :)
+        Olá, {userData.name} :)
       </Heading>
       <Text className="text-white text-center text-sm mt-6">
         {getFormattedDate()}

@@ -1,5 +1,9 @@
-import { auth } from '@/firebase/config'
-import { onAuthStateChanged, User } from '@firebase/auth'
+import { auth, db } from '@/firebase/config'
+import { userConverter } from '@/firebase/converters'
+import { useToast } from '@/hooks'
+import { User } from '@/models'
+import { onAuthStateChanged, User as FirebaseUser } from '@firebase/auth'
+import { collection, getDocs, query, where } from 'firebase/firestore'
 import {
   createContext,
   PropsWithChildren,
@@ -9,28 +13,51 @@ import {
 } from 'react'
 
 type AuthContextProps = {
-  user: User | null
+  user: FirebaseUser | null
+  userData: User
 }
 
-export const AuthContext = createContext<AuthContextProps>({} as AuthContextProps)
+export const AuthContext = createContext<AuthContextProps>(
+  {} as AuthContextProps,
+)
 
 export function AuthProvider({ children }: PropsWithChildren) {
-  const [user, setUser] = useState<User | null>(null)
-  
+  const toast = useToast()
+  const [user, setUser] = useState<FirebaseUser | null>(null)
+  const [userData, setUserData] = useState<User>({} as User)
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        setUser(user)
-      } else {
-        setUser(null)
+      try {
+        if (user) {
+          setUser(user)
+
+          const q = query(
+            collection(db, 'users').withConverter(userConverter),
+            where('email', '==', user.email),
+          )
+          const querySnapshot = await getDocs(q)
+          querySnapshot.forEach((doc) => {
+            setUserData({
+              id: doc.id,
+              ...doc.data(),
+            })
+          })
+        } else {
+          setUser(null)
+        }
+      } catch (error) {
+        toast('error', 'Ocorreu um erro ao buscar o usuário', error.code)
       }
     })
 
     return () => unsubscribe()
-  }, [])
+  }, [toast])
 
   return (
-    <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ user, userData }}>
+      {children}
+    </AuthContext.Provider>
   )
 }
 
