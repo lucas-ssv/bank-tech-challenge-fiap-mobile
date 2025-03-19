@@ -76,22 +76,28 @@ export function Welcome({ ...rest }: Props) {
       <Divider className="h-[2px] my-4" />
       <Text className="text-white text-md">Conta Corrente</Text>
       <View>
-        {balanceBlurred && (
+        {balanceBlurred ? (
           <BlurView
             style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
+              flex: 1,
+              padding: 24,
+              justifyContent: 'center',
+              overflow: 'hidden',
               borderRadius: 8,
-              zIndex: 1,
             }}
             intensity={50}
             tint="light"
-          />
+            className="mt-2"
+          >
+            <Text className="text-white text-2xl font-body mt-2">
+              R$ 2.500,00
+            </Text>
+          </BlurView>
+        ) : (
+          <Text className="text-white text-2xl font-body mt-2">
+            R$ 2.500,00
+          </Text>
         )}
-        <Text className="text-white text-2xl font-body mt-2">R$ 2.500,00</Text>
       </View>
     </Box>
   )
