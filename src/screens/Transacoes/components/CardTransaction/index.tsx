@@ -28,6 +28,7 @@ export function CardTransaction({ transaction, index }: Props) {
 
   const opacity = useSharedValue(0)
   const translateY = useSharedValue(20)
+  const scale = useSharedValue(1)
 
   useEffect(() => {
     opacity.value = withDelay(index * 400, withTiming(1, { duration: 500 }))
@@ -36,7 +37,7 @@ export function CardTransaction({ transaction, index }: Props) {
 
   const animatedStyle = useAnimatedStyle(() => ({
     opacity: opacity.value,
-    transform: [{ translateY: translateY.value }],
+    transform: [{ translateY: translateY.value }, { scale: scale.value }],
   }))
 
   const handleRemoveTransaction = async (transactionId: string) => {
@@ -52,16 +53,21 @@ export function CardTransaction({ transaction, index }: Props) {
           style: 'destructive',
           text: 'Remover',
           onPress: async () => {
-            try {
-              await removeTransaction(transactionId)
-              toast('success', 'Transação removida com sucesso!')
-            } catch (error) {
-              toast(
-                'error',
-                'Ocorreu um erro ao remover a transação.',
-                error.code,
-              )
-            }
+            opacity.value = withTiming(0, { duration: 300 })
+            scale.value = withTiming(0.8, { duration: 300 })
+
+            setTimeout(async () => {
+              try {
+                await removeTransaction(transactionId)
+                toast('success', 'Transação removida com sucesso!')
+              } catch (error) {
+                toast(
+                  'error',
+                  'Ocorreu um erro ao remover a transação.',
+                  error.code,
+                )
+              }
+            }, 300)
           },
         },
       ],
