@@ -12,7 +12,7 @@ import { useAuth } from '@/contexts'
 type Props = DrawerContentComponentProps
 
 export function DrawerContent(props: Props) {
-  const { user } = useAuth()
+  const { userData } = useAuth()
 
   return (
     <DrawerContentScrollView
@@ -31,10 +31,10 @@ export function DrawerContent(props: Props) {
             <Icon as={Avatar} className="w-12 h-12 text-typography-[#FF5031]" />
           </Pressable>
           <Text className="text-white text-lg font-medium mt-2">
-            {user?.displayName}
+            {userData.name}
           </Text>
           <Text className="text-white text-sm font-body mt-1">
-            {user?.email}
+            {userData.email}
           </Text>
         </VStack>
       </SafeAreaView>

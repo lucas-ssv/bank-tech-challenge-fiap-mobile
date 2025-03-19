@@ -15,9 +15,9 @@ import { Input } from './components'
 import { useAuth } from '@/contexts'
 
 export function Profile() {
-  const { user } = useAuth()
-  const [name, setName] = useState(user?.displayName || '')
-  const [email, setEmail] = useState(user?.email || '')
+  const { userData } = useAuth()
+  const [name, setName] = useState(userData.name || '')
+  const [email, setEmail] = useState(userData.email || '')
 
   return (
     <ScrollView
