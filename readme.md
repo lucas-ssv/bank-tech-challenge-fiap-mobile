@@ -2,7 +2,7 @@
 
 ## 📄 Descrição
 
-O **Bank-Tech** é um aplicativo desenvolvido com **React Native** e **Expo**, que integra diversos recursos modernos para garantir uma experiência fluida e segura.
+O **Bank-Tech-Challenge-Fiap-Mobile** é um aplicativo desenvolvido com **React Native** e **Expo**, que integra diversos recursos modernos para garantir uma experiência fluida e segura.
 
 O projeto conta com:
 
@@ -36,8 +36,8 @@ Antes de começar, verifique se você atendeu aos seguintes requisitos:
 ### 1. Clone o repositório:
 
 ```sh
-  git clone https://github.com/seu-usuario/bank-tech.git
-  cd bank-tech
+  git clone https://github.com/lucas-ssv/bank-tech-challenge-fiap-mobile.git
+  cd bank-tech-challenge-fiap-mobile
 ```
 
 ### 2. Instale as dependências:
