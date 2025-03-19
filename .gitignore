@@ -8,6 +8,7 @@ node_modules/
 dist/
 web-build/
 expo-env.d.ts
+.env
 
 # Native
 *.orig.*
@@ -28,9 +29,14 @@ yarn-error.*
 # macOS
 .DS_Store
 *.pem
+ios
 
 # local env files
 .env*.local
 
 # typescript
 *.tsbuildinfo
+coverage
+
+#firebase
+google-services.json

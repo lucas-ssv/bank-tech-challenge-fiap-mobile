@@ -1,20 +1,49 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import React from 'react'
+import { StatusBar } from 'expo-status-bar'
+import {
+  useFonts,
+  Inter_400Regular,
+  Inter_500Medium,
+  Inter_700Bold,
+  Inter_600SemiBold,
+} from '@expo-google-fonts/inter'
+import { Montserrat_400Regular } from '@expo-google-fonts/montserrat'
+import { useEffect } from 'react'
+import * as SplashScreen from 'expo-splash-screen'
+
+import { Routes } from '@/routes'
+import { GluestackUIProvider } from '@/components/ui/gluestack-ui-provider'
+import '@/styles/global.css'
+import 'react-native-gesture-handler'
+import { AuthProvider, TransactionProvider } from '@/contexts'
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Hello World!!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+  const [loaded, error] = useFonts({
+    Inter_400Regular,
+    Inter_500Medium,
+    Inter_600SemiBold,
+    Inter_700Bold,
+    Montserrat_400Regular,
+  })
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
+  useEffect(() => {
+    if (loaded || error) {
+      SplashScreen.hideAsync()
+    }
+  }, [loaded, error])
+
+  if (!loaded && !error) {
+    return null
+  }
+
+  return (
+    <GluestackUIProvider mode="light">
+      <AuthProvider>
+        <TransactionProvider>
+          <Routes />
+        </TransactionProvider>
+      </AuthProvider>
+      <StatusBar style="light" />
+    </GluestackUIProvider>
+  )
+}
